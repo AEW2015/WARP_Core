@@ -1,6 +1,6 @@
 #Documents
 * [Basic Plan](https://github.com/AEW2015/Mimas_V2/blob/master/Docs/Basic_Plan.pdf "Basic_Plan.pdf")
-* [Ram Documentation](https://github.com/AEW2015/Mimas_V2/blob/master/Docs/2Gb_1_35V_DDR3L.pdf "W949D6CBHX6E.pdf")
+* [Ram Documentation](https://github.com/AEW2015/WARP_Core/blob/master/Docs/2Gb_1_35V_DDR3L.pdf "W949D6CBHX6E.pdf")
 * [LC3 Processor Example](https://github.com/AEW2015/Mimas_V2/tree/master/Docs/LC3 "LIttle Computer 3")
 
 ## Arty Documentation
