@@ -71,7 +71,6 @@ Temporary Items
 *.ngm
 *.xrpt
 *.csv
-*.txt
 *.xml
 *.lst
 *.bgn
@@ -88,7 +87,6 @@ Temporary Items
 *.html
 *.exe
 *.wdb
-*.cmd
 *.projectmgr
 *.dbg
 *.dll
