@@ -18,7 +18,6 @@ variable script_folder
 set script_folder [_tcl::get_script_folder]
 
 
-
 ################################################################
 # START
 ################################################################
@@ -159,6 +158,9 @@ CONFIG.FREQ_HZ {100000000} \
  ] $CLK100MHZ
   set led [ create_bd_port -dir O -from 3 -to 0 led ]
   set rgb0 [ create_bd_port -dir O -from 2 -to 0 rgb0 ]
+  set rgb1 [ create_bd_port -dir O -from 2 -to 0 rgb1 ]
+  set rgb2 [ create_bd_port -dir O -from 2 -to 0 rgb2 ]
+  set rgb3 [ create_bd_port -dir O -from 2 -to 0 rgb3 ]
   set rst_n [ create_bd_port -dir I -type rst rst_n ]
   set sw [ create_bd_port -dir I -from 3 -to 0 sw ]
 
@@ -198,7 +200,7 @@ CONFIG.FREQ_HZ {100000000} \
   # Create port connections
   connect_bd_net -net CLK100MHZ_1 [get_bd_ports CLK100MHZ] [get_bd_pins LED_Control_0/clk] [get_bd_pins RGB_Control_0/CLK] [get_bd_pins Top_Control_0/clk]
   connect_bd_net -net LED_Control_0_led [get_bd_ports led] [get_bd_pins LED_Control_0/led]
-  connect_bd_net -net RGB_Control_0_rgb [get_bd_ports rgb0] [get_bd_pins RGB_Control_0/rgb]
+  connect_bd_net -net RGB_Control_0_rgb [get_bd_ports rgb0] [get_bd_ports rgb1] [get_bd_ports rgb2] [get_bd_ports rgb3] [get_bd_pins RGB_Control_0/rgb]
   connect_bd_net -net RST_N_1 [get_bd_ports rst_n] [get_bd_pins LED_Control_0/rst_n] [get_bd_pins RGB_Control_0/RST_N] [get_bd_pins Top_Control_0/rst_n]
   connect_bd_net -net SW_1 [get_bd_ports sw] [get_bd_pins Top_Control_0/sw]
   connect_bd_net -net Top_Control_0_led_en [get_bd_pins LED_Control_0/led_en] [get_bd_pins Top_Control_0/led_en]
@@ -218,19 +220,22 @@ preplace port rst_n -pg 1 -y 60 -defaultsOSRD
 preplace portBus sw -pg 1 -y 160 -defaultsOSRD
 preplace portBus rgb0 -pg 1 -y 210 -defaultsOSRD
 preplace portBus led -pg 1 -y 70 -defaultsOSRD
-preplace inst Top_Control_0 -pg 1 -lvl 1 -y 140 -defaultsOSRD
+preplace portBus rgb1 -pg 1 -y -70 -defaultsOSRD
+preplace portBus rgb2 -pg 1 -y -90 -defaultsOSRD
+preplace portBus rgb3 -pg 1 -y -30 -defaultsOSRD
+preplace inst Top_Control_0 -pg 1 -lvl 1 -y 180 -defaultsOSRD
 preplace inst LED_Control_0 -pg 1 -lvl 2 -y 70 -defaultsOSRD
 preplace inst RGB_Control_0 -pg 1 -lvl 2 -y 210 -defaultsOSRD
 preplace netloc Top_Control_0_led_input 1 1 1 300
-preplace netloc RST_N_1 1 0 2 20 60 290
+preplace netloc RST_N_1 1 0 2 0 60 290
 preplace netloc Top_Control_0_rgb_input 1 1 1 270
-preplace netloc Top_Control_0_led_en 1 1 1 270
+preplace netloc Top_Control_0_led_en 1 1 1 280
 preplace netloc Top_Control_0_rgb_en 1 1 1 280
-preplace netloc CLK100MHZ_1 1 0 2 30 40 310
+preplace netloc CLK100MHZ_1 1 0 2 10 40 310
 preplace netloc LED_Control_0_led 1 2 1 NJ
-preplace netloc RGB_Control_0_rgb 1 2 1 NJ
-preplace netloc SW_1 1 0 1 NJ
-levelinfo -pg 1 0 150 430 570 -top 0 -bot 290
+preplace netloc RGB_Control_0_rgb 1 2 1 560J
+preplace netloc SW_1 1 0 1 -10J
+levelinfo -pg 1 -30 150 440 580 -top -110 -bot 290
 ",
 }
 
@@ -257,13 +262,4 @@ update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
 add_files -fileset constrs_1 -norecurse ../Src/const/Arty_Master.xdc
-
-
-
-
-
-
-
-
-
 
