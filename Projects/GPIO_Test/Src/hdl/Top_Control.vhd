@@ -35,9 +35,13 @@ entity Top_Control is
     Port ( clk : in STD_LOGIC;
            rst_n : in STD_LOGIC;
            sw : in STD_LOGIC_VECTOR (3 downto 0);
+           btn : in STD_LOGIC_VECTOR (3 downto 0);
            led_en : out STD_LOGIC_VECTOR (3 downto 0);
-           rgb_en : out STD_LOGIC;
-           rgb_input : out std_logic_vector(23 downto 0);
+           rgb_en : out STD_LOGIC_VECTOR (3 downto 0);
+           rgb0_input : out std_logic_vector(23 downto 0);
+           rgb1_input : out std_logic_vector(23 downto 0);
+           rgb2_input : out std_logic_vector(23 downto 0);
+           rgb3_input : out std_logic_vector(23 downto 0);
            led_input : out STD_LOGIC_VECTOR (31 downto 0));
 end Top_Control;
 
@@ -55,9 +59,9 @@ end process;
 
 led_en <= sw;
 led_input <= std_logic_vector(counter(43 downto 12));
-rgb_en <= '1';
+rgb_en <= btn;
 
-with counter(29 downto 26) select rgb_input <=
+with counter(29 downto 26) select rgb0_input <=
     x"FFFFFF" when "0000",
     x"FF0000" when "0001",
     x"00FF00" when "0010",
@@ -73,6 +77,20 @@ with counter(29 downto 26) select rgb_input <=
     x"FFDAB9" when "1100",    
     x"C0C0C0" when "1101",    
     x"40E0D0" when "1110",    
-    x"DEB887" when "1111";    
+    x"DEB887" when "1111";   
+
+with counter(26) select rgb1_input <=
+    x"FF1493" when '0',
+    x"00BFFF" when '1';
+  
+
+with counter(26) select rgb2_input <=
+    x"E6E6FA" when '0',
+    x"40E0D0" when '1';
+   
+
+with counter(26) select rgb3_input <=
+     x"800080" when '0',
+     x"FF7F50" when '1';    
 
 end Behavioral;
