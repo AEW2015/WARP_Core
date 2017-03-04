@@ -53,15 +53,7 @@ begin
 -- Memory Pointer Process
 	fifo_proc : process (CLK)
 		type FIFO_Memory is array (0 to FIFO_DEPTH - 1) of STD_LOGIC_VECTOR (DATA_WIDTH - 1 downto 0);
-		variable Memory : FIFO_Memory:=
-		(x"61", -- 'a'
-		x"62",  -- 'b'
-		x"63",  -- 'c'
-		x"64",  -- 'd'
-		x"65",  -- 'e'
-		x"66",  -- 'f'
-		x"67",  -- 'g'
-		others=>(others=>'0'));
+		variable Memory : FIFO_Memory;
 
 		variable Head : natural range 0 to FIFO_DEPTH - 1;
 		variable Tail : natural range 0 to FIFO_DEPTH - 1;
@@ -70,7 +62,7 @@ begin
 	begin
 		if rising_edge(CLK) then
 			if RST_N = '0' then
-				Head := 7;
+				Head := 0;
 				Tail := 0;
 				
 				Looped := false;

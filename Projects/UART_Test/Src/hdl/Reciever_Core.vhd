@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity Reciever_Core is
     Generic (
         CLK_RATE: natural :=100_000_000;
-        BAUD_RATE: natural :=9_600);
+        BAUD_RATE: natural :=115_200);
     Port ( clk : in STD_LOGIC;
            rst_n : in STD_LOGIC;
            rx : in STD_LOGIC;
