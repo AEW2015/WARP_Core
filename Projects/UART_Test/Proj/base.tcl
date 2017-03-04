@@ -18,7 +18,6 @@ variable script_folder
 set script_folder [_tcl::get_script_folder]
 
 
-
 ################################################################
 # START
 ################################################################
@@ -29,7 +28,7 @@ set script_folder [_tcl::get_script_folder]
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# LED_Control, RGB_Control, Top_Control, btn_control, btn_debounce, btn_debounce, btn_debounce, btn_debounce, btn_split
+# FIFO, LED_Control, RGB_Control, Reciever_Core, Top_Control, Transmitter_Core, btn_control, btn_debounce, btn_debounce, btn_debounce, btn_debounce, btn_split
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -240,36 +239,6 @@ proc create_hier_cell_buttons { parentCell nameHier } {
   connect_bd_net -net btn_split_0_btn3 [get_bd_pins btn_debounce_3/btn_in] [get_bd_pins btn_split_0/btn3]
   connect_bd_net -net rst_n_1 [get_bd_pins rst_n] [get_bd_pins btn_control_0/rst_n] [get_bd_pins btn_debounce_0/rst_n] [get_bd_pins btn_debounce_1/rst_n] [get_bd_pins btn_debounce_2/rst_n] [get_bd_pins btn_debounce_3/rst_n]
 
-  # Perform GUI Layout
-  regenerate_bd_layout -hierarchy [get_bd_cells /buttons] -layout_string {
-   guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
-#  -string -flagsOSRD
-preplace port CLK100MHZ -pg 1 -y 40 -defaultsOSRD
-preplace port rst_n -pg 1 -y 60 -defaultsOSRD
-preplace portBus btn_out -pg 1 -y 290 -defaultsOSRD
-preplace portBus btn_in -pg 1 -y 210 -defaultsOSRD
-preplace inst btn_control_0 -pg 1 -lvl 3 -y 290 -defaultsOSRD
-preplace inst btn_debounce_0 -pg 1 -lvl 2 -y 60 -defaultsOSRD
-preplace inst btn_debounce_1 -pg 1 -lvl 2 -y 180 -defaultsOSRD
-preplace inst btn_debounce_2 -pg 1 -lvl 2 -y 330 -defaultsOSRD
-preplace inst btn_debounce_3 -pg 1 -lvl 2 -y 450 -defaultsOSRD
-preplace inst btn_split_0 -pg 1 -lvl 1 -y 210 -defaultsOSRD
-preplace netloc btn_split_0_btn1 1 1 1 N
-preplace netloc btn_split_0_btn2 1 1 1 240
-preplace netloc btn_split_0_btn3 1 1 1 220
-preplace netloc btn_control_0_btn_out 1 3 1 N
-preplace netloc btn_debounce_1_btn_out 1 2 1 440
-preplace netloc btn_debounce_3_btn_out 1 2 1 440
-preplace netloc btn_debounce_2_btn_out 1 2 1 440
-preplace netloc rst_n_1 1 0 3 NJ 60 230 260 NJ
-preplace netloc btn_in_1 1 0 1 NJ
-preplace netloc CLK100MHZ_1 1 0 3 NJ 40 250 250 430J
-preplace netloc btn_debounce_0_btn_out 1 2 1 450
-preplace netloc btn_split_0_btn0 1 1 1 220
-levelinfo -pg 1 0 120 340 550 670 -top 0 -bot 520
-",
-}
-
   # Restore current instance
   current_bd_instance $oldCurInst
 }
@@ -321,7 +290,20 @@ CONFIG.FREQ_HZ {100000000} \
   set rgb3 [ create_bd_port -dir O -from 2 -to 0 rgb3 ]
   set rst_n [ create_bd_port -dir I -type rst rst_n ]
   set sw [ create_bd_port -dir I -from 3 -to 0 sw ]
+  set uart_rx [ create_bd_port -dir I uart_rx ]
+  set uart_tx [ create_bd_port -dir O uart_tx ]
 
+  # Create instance: FIFO_0, and set properties
+  set block_name FIFO
+  set block_cell_name FIFO_0
+  if { [catch {set FIFO_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $FIFO_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: LED_Control_0, and set properties
   set block_name LED_Control
   set block_cell_name LED_Control_0
@@ -344,6 +326,20 @@ CONFIG.FREQ_HZ {100000000} \
      return 1
    }
   
+  # Create instance: Reciever_Core_0, and set properties
+  set block_name Reciever_Core
+  set block_cell_name Reciever_Core_0
+  if { [catch {set Reciever_Core_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $Reciever_Core_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+CONFIG.BAUD_RATE {115200} \
+ ] $Reciever_Core_0
+
   # Create instance: Top_Control_0, and set properties
   set block_name Top_Control
   set block_cell_name Top_Control_0
@@ -355,27 +351,51 @@ CONFIG.FREQ_HZ {100000000} \
      return 1
    }
   
+  # Create instance: Transmitter_Core_0, and set properties
+  set block_name Transmitter_Core
+  set block_cell_name Transmitter_Core_0
+  if { [catch {set Transmitter_Core_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $Transmitter_Core_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+CONFIG.BAUD_RATE {115200} \
+ ] $Transmitter_Core_0
+
   # Create instance: buttons
   create_hier_cell_buttons [current_bd_instance .] buttons
 
   # Create port connections
-  connect_bd_net -net CLK100MHZ_1 [get_bd_ports CLK100MHZ] [get_bd_pins LED_Control_0/clk] [get_bd_pins RGB_Control_0/CLK] [get_bd_pins Top_Control_0/clk] [get_bd_pins buttons/CLK100MHZ]
+  connect_bd_net -net CLK100MHZ_1 [get_bd_ports CLK100MHZ] [get_bd_pins FIFO_0/CLK] [get_bd_pins LED_Control_0/clk] [get_bd_pins RGB_Control_0/CLK] [get_bd_pins Reciever_Core_0/clk] [get_bd_pins Top_Control_0/clk] [get_bd_pins Transmitter_Core_0/clk] [get_bd_pins buttons/CLK100MHZ]
+  connect_bd_net -net FIFO_0_DataOut [get_bd_pins FIFO_0/DataOut] [get_bd_pins Top_Control_0/data_rx]
+  connect_bd_net -net FIFO_0_Empty [get_bd_pins FIFO_0/Empty] [get_bd_pins Top_Control_0/empty]
   connect_bd_net -net LED_Control_0_led [get_bd_ports led] [get_bd_pins LED_Control_0/led]
   connect_bd_net -net RGB_Control_0_rgb0 [get_bd_ports rgb0] [get_bd_pins RGB_Control_0/rgb0]
   connect_bd_net -net RGB_Control_0_rgb1 [get_bd_ports rgb1] [get_bd_pins RGB_Control_0/rgb1]
   connect_bd_net -net RGB_Control_0_rgb2 [get_bd_ports rgb2] [get_bd_pins RGB_Control_0/rgb2]
   connect_bd_net -net RGB_Control_0_rgb3 [get_bd_ports rgb3] [get_bd_pins RGB_Control_0/rgb3]
-  connect_bd_net -net RST_N_1 [get_bd_ports rst_n] [get_bd_pins LED_Control_0/rst_n] [get_bd_pins RGB_Control_0/RST_N] [get_bd_pins Top_Control_0/rst_n] [get_bd_pins buttons/rst_n]
+  connect_bd_net -net RST_N_1 [get_bd_ports rst_n] [get_bd_pins FIFO_0/RST_N] [get_bd_pins LED_Control_0/rst_n] [get_bd_pins RGB_Control_0/RST_N] [get_bd_pins Reciever_Core_0/rst_n] [get_bd_pins Top_Control_0/rst_n] [get_bd_pins Transmitter_Core_0/rst_n] [get_bd_pins buttons/rst_n]
+  connect_bd_net -net Reciever_Core_0_data_rx [get_bd_pins FIFO_0/DataIn] [get_bd_pins Reciever_Core_0/data_rx]
+  connect_bd_net -net Reciever_Core_0_rec_data [get_bd_pins FIFO_0/WriteEn] [get_bd_pins Reciever_Core_0/rec_data]
   connect_bd_net -net SW_1 [get_bd_ports sw] [get_bd_pins Top_Control_0/sw]
+  connect_bd_net -net Top_Control_0_data_tx [get_bd_pins Top_Control_0/data_tx] [get_bd_pins Transmitter_Core_0/data_tx]
   connect_bd_net -net Top_Control_0_led_en [get_bd_pins LED_Control_0/led_en] [get_bd_pins Top_Control_0/led_en]
   connect_bd_net -net Top_Control_0_led_input [get_bd_pins LED_Control_0/led_input] [get_bd_pins Top_Control_0/led_input]
+  connect_bd_net -net Top_Control_0_read_fifo [get_bd_pins FIFO_0/ReadEn] [get_bd_pins Top_Control_0/read_fifo]
   connect_bd_net -net Top_Control_0_rgb0_input [get_bd_pins RGB_Control_0/rgb0_input] [get_bd_pins Top_Control_0/rgb0_input]
   connect_bd_net -net Top_Control_0_rgb1_input [get_bd_pins RGB_Control_0/rgb1_input] [get_bd_pins Top_Control_0/rgb1_input]
   connect_bd_net -net Top_Control_0_rgb2_input [get_bd_pins RGB_Control_0/rgb2_input] [get_bd_pins Top_Control_0/rgb2_input]
   connect_bd_net -net Top_Control_0_rgb3_input [get_bd_pins RGB_Control_0/rgb3_input] [get_bd_pins Top_Control_0/rgb3_input]
   connect_bd_net -net Top_Control_0_rgb_en [get_bd_pins RGB_Control_0/rgb_en] [get_bd_pins Top_Control_0/rgb_en]
+  connect_bd_net -net Top_Control_0_send_data [get_bd_pins Top_Control_0/send_data] [get_bd_pins Transmitter_Core_0/send_data]
+  connect_bd_net -net Transmitter_Core_0_tx [get_bd_ports uart_tx] [get_bd_pins Transmitter_Core_0/tx]
+  connect_bd_net -net Transmitter_Core_0_tx_busy [get_bd_pins Top_Control_0/tx_busy] [get_bd_pins Transmitter_Core_0/tx_busy]
   connect_bd_net -net btn_1 [get_bd_ports btn] [get_bd_pins buttons/btn_in]
   connect_bd_net -net buttons_btn_out [get_bd_pins Top_Control_0/btn] [get_bd_pins buttons/btn_out]
+  connect_bd_net -net uart_rx_1 [get_bd_ports uart_rx] [get_bd_pins Reciever_Core_0/rx]
 
   # Create address segments
 
@@ -383,37 +403,52 @@ CONFIG.FREQ_HZ {100000000} \
   regenerate_bd_layout -layout_string {
    guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
 #  -string -flagsOSRD
-preplace port CLK100MHZ -pg 1 -y 40 -defaultsOSRD
-preplace port rst_n -pg 1 -y 60 -defaultsOSRD
-preplace portBus sw -pg 1 -y 260 -defaultsOSRD
-preplace portBus btn -pg 1 -y 360 -defaultsOSRD
-preplace portBus rgb0 -pg 1 -y 210 -defaultsOSRD
-preplace portBus led -pg 1 -y 70 -defaultsOSRD
-preplace portBus rgb1 -pg 1 -y 230 -defaultsOSRD
-preplace portBus rgb2 -pg 1 -y 250 -defaultsOSRD
-preplace portBus rgb3 -pg 1 -y 270 -defaultsOSRD
-preplace inst buttons -pg 1 -lvl 1 -y 340 -defaultsOSRD
-preplace inst Top_Control_0 -pg 1 -lvl 2 -y 260 -defaultsOSRD
-preplace inst LED_Control_0 -pg 1 -lvl 3 -y 70 -defaultsOSRD
-preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 240 -defaultsOSRD
-preplace netloc btn_1 1 0 1 NJ
-preplace netloc Top_Control_0_led_input 1 2 1 530
-preplace netloc RST_N_1 1 0 3 20 60 250 60 510
-preplace netloc buttons_btn_out 1 1 1 250
-preplace netloc Top_Control_0_rgb3_input 1 2 1 N
-preplace netloc Top_Control_0_rgb2_input 1 2 1 N
-preplace netloc Top_Control_0_rgb1_input 1 2 1 N
-preplace netloc RGB_Control_0_rgb0 1 3 1 NJ
-preplace netloc RGB_Control_0_rgb1 1 3 1 NJ
-preplace netloc Top_Control_0_rgb0_input 1 2 1 N
-preplace netloc RGB_Control_0_rgb2 1 3 1 NJ
-preplace netloc RGB_Control_0_rgb3 1 3 1 NJ
-preplace netloc Top_Control_0_led_en 1 2 1 500
-preplace netloc Top_Control_0_rgb_en 1 2 1 N
-preplace netloc CLK100MHZ_1 1 0 3 30 40 260 40 520
-preplace netloc LED_Control_0_led 1 3 1 NJ
-preplace netloc SW_1 1 0 2 NJ 260 260J
-levelinfo -pg 1 0 140 380 660 810 -top 0 -bot 410
+preplace port uart_tx -pg 1 -y 430 -defaultsOSRD
+preplace port CLK100MHZ -pg 1 -y 550 -defaultsOSRD
+preplace port uart_rx -pg 1 -y 250 -defaultsOSRD
+preplace port rst_n -pg 1 -y 570 -defaultsOSRD
+preplace portBus sw -pg 1 -y 360 -defaultsOSRD
+preplace portBus btn -pg 1 -y 70 -defaultsOSRD
+preplace portBus rgb0 -pg 1 -y 240 -defaultsOSRD
+preplace portBus led -pg 1 -y 580 -defaultsOSRD
+preplace portBus rgb1 -pg 1 -y 260 -defaultsOSRD
+preplace portBus rgb2 -pg 1 -y 280 -defaultsOSRD
+preplace portBus rgb3 -pg 1 -y 300 -defaultsOSRD
+preplace inst buttons -pg 1 -lvl 2 -y 70 -defaultsOSRD
+preplace inst Top_Control_0 -pg 1 -lvl 3 -y 350 -defaultsOSRD
+preplace inst LED_Control_0 -pg 1 -lvl 4 -y 580 -defaultsOSRD
+preplace inst Reciever_Core_0 -pg 1 -lvl 1 -y 230 -defaultsOSRD
+preplace inst FIFO_0 -pg 1 -lvl 2 -y 210 -defaultsOSRD
+preplace inst Transmitter_Core_0 -pg 1 -lvl 4 -y 440 -defaultsOSRD
+preplace inst RGB_Control_0 -pg 1 -lvl 4 -y 250 -defaultsOSRD
+preplace netloc Top_Control_0_read_fifo 1 1 3 250 320 500J 170 820
+preplace netloc btn_1 1 0 2 NJ 70 NJ
+preplace netloc Top_Control_0_led_input 1 3 1 820
+preplace netloc RST_N_1 1 0 4 20 570 240 570 550 570 890
+preplace netloc buttons_btn_out 1 2 1 540
+preplace netloc Top_Control_0_rgb3_input 1 3 1 920
+preplace netloc Top_Control_0_rgb2_input 1 3 1 900
+preplace netloc Reciever_Core_0_data_rx 1 1 1 230
+preplace netloc Top_Control_0_send_data 1 3 1 910
+preplace netloc Top_Control_0_rgb1_input 1 3 1 870
+preplace netloc RGB_Control_0_rgb0 1 4 1 1220J
+preplace netloc Transmitter_Core_0_tx 1 4 1 NJ
+preplace netloc RGB_Control_0_rgb1 1 4 1 1210J
+preplace netloc FIFO_0_DataOut 1 2 1 510
+preplace netloc Reciever_Core_0_rec_data 1 1 1 N
+preplace netloc Top_Control_0_rgb0_input 1 3 1 840
+preplace netloc RGB_Control_0_rgb2 1 4 1 1200J
+preplace netloc Top_Control_0_led_en 1 3 1 850
+preplace netloc RGB_Control_0_rgb3 1 4 1 1190J
+preplace netloc FIFO_0_Empty 1 2 1 520
+preplace netloc Top_Control_0_data_tx 1 3 1 880
+preplace netloc Top_Control_0_rgb_en 1 3 1 830
+preplace netloc CLK100MHZ_1 1 0 4 0 550 220 550 530 550 860
+preplace netloc uart_rx_1 1 0 1 NJ
+preplace netloc LED_Control_0_led 1 4 1 NJ
+preplace netloc Transmitter_Core_0_tx_busy 1 2 3 560 490 930J 360 1210
+preplace netloc SW_1 1 0 3 10J 350 NJ 350 NJ
+levelinfo -pg 1 -20 120 380 690 1060 1240 -top 0 -bot 660
 ",
 }
 

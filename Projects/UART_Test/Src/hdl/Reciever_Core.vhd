@@ -110,7 +110,7 @@ begin
 			end if;
 		when STRT=>
 			if(pulse = '1') then
-				if(stime = "0110") then
+				if(stime = "0111") then
 					stime_next<=(others=>'0');
 					dtime_next<=(others=>'0');
 					state_next<=DATAREAD;
@@ -142,7 +142,7 @@ begin
 			end if; 
 		when STP=>
 			if(pulse = '1') then
-				if(stime = "1111") then
+				if(stime = "0111") then
 					if(RX='1') then
 						stime_next<=(others=>'0');
 						rec_data<='1';

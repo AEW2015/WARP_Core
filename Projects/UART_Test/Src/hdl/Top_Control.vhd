@@ -34,8 +34,10 @@ use IEEE.NUMERIC_STD.ALL;
 entity Top_Control is
     Port ( clk : in STD_LOGIC;
            rst_n : in STD_LOGIC;
-           rec_data : in STD_LOGIC;
+           empty : in STD_LOGIC;
+           read_fifo : out STD_LOGIC;
            sw : in STD_LOGIC_VECTOR (3 downto 0);
+           tx_busy : in STD_LOGIC;
            btn : in STD_LOGIC_VECTOR (3 downto 0);
            send_data : out STD_LOGIC;
            data_tx : out STD_LOGIC_VECTOR (7 downto 0);
@@ -51,8 +53,9 @@ end Top_Control;
 
 architecture Behavioral of Top_Control is
     signal counter,counter_next:unsigned(43 downto 0):=(others=>'0');
-    signal uart_flag:std_logic;
+    signal uart_flag,uart_flag_1:std_logic;
     signal uart_data:std_logic_vector(7 downto 0):=(others=>'0');
+    signal uart_state_reg,uart_state_next:unsigned(2 downto 0):=(others=>'0');
 begin
 process(clk,rst_n)
 begin
@@ -60,19 +63,26 @@ begin
         counter <= (others=>'0');
         uart_data <= (others=>'0');
         uart_flag <= '0';
+        uart_state_reg <= (others=>'0');
     elsif(clk'event and clk = '1') then
         counter <= counter + 1;
-        uart_data <= data_rx;
-        uart_flag <= rec_data;
+        uart_state_reg <= uart_state_next;
+        if(uart_state_reg = 2) then
+            uart_data <= data_rx;
+        end if;
+        uart_flag <= not empty and not tx_busy;
+        uart_flag_1 <= uart_flag;
     end if;
 end process;
 
 led_en <= sw;
 led_input <= std_logic_vector(counter(43 downto 12));
 rgb_en <= btn;
-send_data <= rec_data or btn(0);
-data_tx <= x"64" when btn(0)='1' else uart_data;
+read_fifo <= '1' when uart_state_reg = 1 else '0';
+send_data <= '1' when uart_state_reg = 3 else btn(0);
+data_tx <= x"64" when btn(0)='1' else data_rx;
 
+uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty and not tx_busy) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
 
 
 
