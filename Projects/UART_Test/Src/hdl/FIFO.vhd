@@ -62,7 +62,7 @@ begin
 	begin
 		if rising_edge(CLK) then
 			if RST_N = '0' then
-				Head := 145;
+				Head := 0;
 				Tail := 0;
 				
 				Looped := false;
