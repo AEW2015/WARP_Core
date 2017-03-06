@@ -78,7 +78,7 @@ begin
 FIFO_i: component FIFO
      Generic map(
         DATA_WIDTH  =>8,
-        FIFO_DEPTH  =>156)
+        FIFO_DEPTH  =>256)
      port map (
       clk => clk,
       RST_N => RST_N,
@@ -97,7 +97,7 @@ TX_i: component Transmitter_Core
       clk => clk,
       RST_N => RST_N,
       send_data => tx_send,
-      data_tx => reg,
+      data_tx => reg_next,
       tx => tx,
       tx_busy => tx_busy
     );

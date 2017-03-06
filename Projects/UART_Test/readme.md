@@ -1,3 +1,3 @@
-#UART Test
+#GPIO Test
 
-To recieve a byte and repeat it back to the host
+to test all the switches, buttons, leds, and rgb leds.

@@ -43,7 +43,6 @@ if { $list_projs eq "" } {
 
 add_files ../Src/hdl/
 
-
 # CHANGE DESIGN NAME HERE
 set design_name system
 
@@ -383,48 +382,48 @@ CONFIG.FREQ_HZ {100000000} \
   regenerate_bd_layout -layout_string {
    guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
 #  -string -flagsOSRD
-preplace port uart_tx -pg 1 -y 280 -defaultsOSRD
-preplace port CLK100MHZ -pg 1 -y 380 -defaultsOSRD
-preplace port uart_rx -pg 1 -y 110 -defaultsOSRD
-preplace port rst_n -pg 1 -y 400 -defaultsOSRD
-preplace portBus sw -pg 1 -y 180 -defaultsOSRD
-preplace portBus btn -pg 1 -y 270 -defaultsOSRD
-preplace portBus rgb0 -pg 1 -y 70 -defaultsOSRD
-preplace portBus led -pg 1 -y 410 -defaultsOSRD
-preplace portBus rgb1 -pg 1 -y 90 -defaultsOSRD
-preplace portBus rgb2 -pg 1 -y 110 -defaultsOSRD
-preplace portBus rgb3 -pg 1 -y 130 -defaultsOSRD
-preplace inst buttons -pg 1 -lvl 1 -y 270 -defaultsOSRD
-preplace inst Top_Control_0 -pg 1 -lvl 2 -y 160 -defaultsOSRD
-preplace inst LED_Control_0 -pg 1 -lvl 3 -y 410 -defaultsOSRD
-preplace inst UART_TX_0 -pg 1 -lvl 3 -y 270 -defaultsOSRD
-preplace inst UART_RX_0 -pg 1 -lvl 1 -y 100 -defaultsOSRD
-preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 100 -defaultsOSRD
-preplace netloc Top_Control_0_read_fifo 1 0 3 40 20 NJ 20 560
+preplace port uart_tx -pg 1 -y 520 -defaultsOSRD
+preplace port CLK100MHZ -pg 1 -y 40 -defaultsOSRD
+preplace port uart_rx -pg 1 -y 520 -defaultsOSRD
+preplace port rst_n -pg 1 -y 60 -defaultsOSRD
+preplace portBus sw -pg 1 -y 390 -defaultsOSRD
+preplace portBus btn -pg 1 -y 140 -defaultsOSRD
+preplace portBus rgb0 -pg 1 -y 350 -defaultsOSRD
+preplace portBus led -pg 1 -y 210 -defaultsOSRD
+preplace portBus rgb1 -pg 1 -y 370 -defaultsOSRD
+preplace portBus rgb2 -pg 1 -y 390 -defaultsOSRD
+preplace portBus rgb3 -pg 1 -y 410 -defaultsOSRD
+preplace inst buttons -pg 1 -lvl 1 -y 140 -defaultsOSRD
+preplace inst Top_Control_0 -pg 1 -lvl 2 -y 370 -defaultsOSRD
+preplace inst LED_Control_0 -pg 1 -lvl 3 -y 210 -defaultsOSRD
+preplace inst UART_TX_0 -pg 1 -lvl 3 -y 70 -defaultsOSRD
+preplace inst UART_RX_0 -pg 1 -lvl 1 -y 310 -defaultsOSRD
+preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 380 -defaultsOSRD
 preplace netloc btn_1 1 0 1 NJ
-preplace netloc Top_Control_0_led_input 1 2 1 560
-preplace netloc RST_N_1 1 0 3 30 400 290 400 620
+preplace netloc Top_Control_0_read_fifo 1 0 3 30 530 NJ 530 560
+preplace netloc Top_Control_0_led_input 1 2 1 620
+preplace netloc RST_N_1 1 0 3 20 60 290 60 590
+preplace netloc buttons_btn_out 1 1 1 280
 preplace netloc UART_RX_0_empty 1 1 1 270
-preplace netloc buttons_btn_out 1 1 1 300
-preplace netloc Top_Control_0_rgb3_input 1 2 1 650
-preplace netloc Top_Control_0_rgb2_input 1 2 1 630
-preplace netloc Top_Control_0_send_data 1 2 1 640
-preplace netloc Top_Control_0_rgb1_input 1 2 1 600
+preplace netloc Top_Control_0_rgb3_input 1 2 1 N
+preplace netloc Top_Control_0_rgb2_input 1 2 1 N
+preplace netloc Top_Control_0_send_data 1 2 1 580
+preplace netloc Top_Control_0_rgb1_input 1 2 1 N
 preplace netloc RGB_Control_0_rgb0 1 3 1 NJ
-preplace netloc UART_RX_0_data_out 1 1 1 280
+preplace netloc UART_RX_0_data_out 1 1 1 260
 preplace netloc RGB_Control_0_rgb1 1 3 1 NJ
-preplace netloc Top_Control_0_rgb0_input 1 2 1 570
+preplace netloc Top_Control_0_rgb0_input 1 2 1 N
 preplace netloc RGB_Control_0_rgb2 1 3 1 NJ
-preplace netloc Top_Control_0_led_en 1 2 1 580
+preplace netloc Top_Control_0_led_en 1 2 1 570
 preplace netloc RGB_Control_0_rgb3 1 3 1 NJ
-preplace netloc UART_TX_0_tx 1 3 1 NJ
-preplace netloc Top_Control_0_data_tx 1 2 1 610
-preplace netloc Top_Control_0_rgb_en 1 2 1 560
-preplace netloc CLK100MHZ_1 1 0 3 20 380 260 380 590
-preplace netloc uart_rx_1 1 0 1 NJ
+preplace netloc UART_TX_0_tx 1 3 1 880
+preplace netloc Top_Control_0_rgb_en 1 2 1 N
+preplace netloc Top_Control_0_data_tx 1 2 1 600
+preplace netloc CLK100MHZ_1 1 0 3 30 40 300 40 610
+preplace netloc uart_rx_1 1 0 1 20
 preplace netloc LED_Control_0_led 1 3 1 NJ
-preplace netloc SW_1 1 0 2 NJ 180 270J
-levelinfo -pg 1 0 150 430 780 930 -top 0 -bot 490
+preplace netloc SW_1 1 0 2 NJ 390 300J
+levelinfo -pg 1 0 150 430 750 900 -top 0 -bot 540
 ",
 }
 

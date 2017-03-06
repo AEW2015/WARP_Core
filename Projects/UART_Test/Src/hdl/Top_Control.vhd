@@ -37,7 +37,7 @@ entity Top_Control is
            empty : in STD_LOGIC;
            read_fifo : out STD_LOGIC;
            sw : in STD_LOGIC_VECTOR (3 downto 0);
-           tx_busy : in STD_LOGIC;
+           --tx_busy : in STD_LOGIC;
            btn : in STD_LOGIC_VECTOR (3 downto 0);
            send_data : out STD_LOGIC;
            data_tx : out STD_LOGIC_VECTOR (7 downto 0);
@@ -70,7 +70,7 @@ begin
         if(uart_state_reg = 2) then
             uart_data <= data_rx;
         end if;
-        uart_flag <= not empty and not tx_busy;
+        uart_flag <= not empty;
         uart_flag_1 <= uart_flag;
     end if;
 end process;
@@ -80,9 +80,9 @@ led_input <= std_logic_vector(counter(43 downto 12));
 rgb_en <= btn;
 read_fifo <= '1' when uart_state_reg = 1 else '0';
 send_data <= '1' when uart_state_reg = 3 else btn(0);
-data_tx <= x"64" when btn(0)='1' else data_rx;
+data_tx <= x"64" when btn(0)='1' else uart_data;
 
-uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty and not tx_busy) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
+uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
 
 
 

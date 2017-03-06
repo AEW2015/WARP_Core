@@ -78,7 +78,7 @@ begin
 FIFO_i: component FIFO
      Generic map(
         DATA_WIDTH  =>8,
-        FIFO_DEPTH  =>156)
+        FIFO_DEPTH  =>256)
      port map (
       clk => clk,
       RST_N => RST_N,
