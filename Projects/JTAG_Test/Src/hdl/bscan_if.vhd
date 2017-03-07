@@ -47,6 +47,7 @@ architecture rtl of bscan_if is
 	type fsm is (IDLE,SEND,DELAY,DATA,D_SEND,PASS);
     signal state,state_next: fsm;
     signal counter,counter_next: unsigned(3 downto 0);
+    signal bitcount : unsigned(2 downto 0) := (others => '0');
     
 begin
 
@@ -140,11 +141,13 @@ begin
 				if capture = '1' then
 					-- Latch all of the data into the shift register that should be sent out of the BSCAN.
 					-- This is done BEFORE the data is shifted (to get the correct data loaded)
-					shift_reg <= data_out;
+                    shift_reg <= data_out;
+					bitcount <= to_unsigned(0,3);
 					data_out_capture <= '1';
 				elsif shift = '1' then
 					-- Perform a shift of the shift register
 					shift_reg <= shift_reg(DATA_WIDTH-2 downto 0) & tdi;
+					bitcount <= bitcount + 1;
 				end if;
 			end if;
 		end if;
@@ -193,7 +196,7 @@ begin
     end if;
 end process;
 	
-process (state,update,sel,shift_reg)
+process (state,update,sel,shift_reg,bitcount,capture)
 begin
     counter_next <= counter;
     state_next <= state;
@@ -201,7 +204,7 @@ begin
     data_in <= "0011" & std_logic_vector(counter);
      case state is
         when IDLE =>
-            if(update = '1' and sel = '1' and shift_reg = x"E8") then
+            if(bitcount = 0 and shift_reg = x"E8") then
                 state_next <= SEND;
             end if;
         when SEND =>
@@ -209,21 +212,24 @@ begin
             state_next <= DELAY;
             counter_next <= counter+1;
        when DELAY =>
-             if(update = '0') then
+             if(bitcount /= 0) then
                       state_next <= DATA;
              end if;
         when DATA =>
-             if(update = '1' and sel = '1') then
-                   state_next <= D_SEND;
-               end if;
+            if(bitcount = 0 ) then
+                state_next <= D_SEND;
+            end if;
+            if(capture = '1') then
+                state_next <= IDLE;
+            end if;
         when D_SEND =>
           data_in_update <= '1';
           state_next <= PASS;
           data_in <= shift_reg;
         when PASS =>
-            if(update = '0' and sel = '0') then
-               state_next <= IDLE;
-           end if;
+            if(bitcount /= 0) then
+              state_next <= DATA;
+            end if;
        end case;
 end process;
 	

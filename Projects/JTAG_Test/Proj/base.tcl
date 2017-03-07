@@ -44,6 +44,8 @@ if { $list_projs eq "" } {
 
 add_files ../Src/hdl/
 
+
+
 # CHANGE DESIGN NAME HERE
 set design_name system
 
@@ -460,7 +462,6 @@ levelinfo -pg 1 0 180 530 860 1010 -top 0 -bot 640
 
 create_root_design ""
 
-
 # Additional steps to get to bitstream
 # generate toplevel wrapper files
 set_property target_language VHDL [current_project]
@@ -471,3 +472,4 @@ update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
 add_files -fileset constrs_1 -norecurse ../Src/const/Arty_Master.xdc
+
