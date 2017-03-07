@@ -1,3 +1,5 @@
-#Cores
+#Debug
 
-Once the project gets moving I will put the completed cores for the various IOS and Hardware Functionality 
+This tcl script allows you to program and debug the processor
+
+Current passcode is e8, use it before all commands
