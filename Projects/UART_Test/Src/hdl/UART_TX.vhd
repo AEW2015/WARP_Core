@@ -78,7 +78,7 @@ begin
 FIFO_i: component FIFO
      Generic map(
         DATA_WIDTH  =>8,
-        FIFO_DEPTH  =>256)
+        FIFO_DEPTH  =>2048)
      port map (
       clk => clk,
       RST_N => RST_N,
@@ -116,7 +116,7 @@ end process;
 ------------------------
 --FSM NEXT STATE LOGIC--
 ------------------------
-process(state,empty,tx_busy)
+process(state,empty,tx_busy,reg,data_out)
 begin
     state_next <= state;
     reg_next   <= reg;

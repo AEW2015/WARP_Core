@@ -50,8 +50,8 @@ entity Top_Control is
            rgb1_input : out std_logic_vector(23 downto 0);
            rgb2_input : out std_logic_vector(23 downto 0);
            rgb3_input : out std_logic_vector(23 downto 0);
-           JTAG_OUT : out STD_LOGIC_VECTOR (7 downto 0);
-           JTAG_IN : in STD_LOGIC_VECTOR (7 downto 0);
+           JTAG_OUT : out STD_LOGIC_VECTOR (31 downto 0);
+           JTAG_IN : in STD_LOGIC_VECTOR (31 downto 0);
            led_input : out STD_LOGIC_VECTOR (31 downto 0));
 end Top_Control;
 
@@ -59,36 +59,93 @@ architecture Behavioral of Top_Control is
     signal counter,counter_next:unsigned(43 downto 0):=(others=>'0');
 
     signal uart_data:std_logic_vector(7 downto 0):=(others=>'0');
+    signal jtag_data:std_logic_vector(31 downto 0):=(others=>'0');
     signal uart_state_reg,uart_state_next:unsigned(2 downto 0):=(others=>'0');
+    signal jtag_state_reg,jtag_state_next:unsigned(2 downto 0):=(others=>'0');
+    
+    type fsm is (IDLE,REG,SEND);
+        signal state,state_next: fsm;
+        
+    signal mem_counter,mem_counter_next: unsigned(11 downto 0);
+    signal send_flag: std_logic;
+        
 begin
 process(clk,rst_n)
 begin
     if(rst_n = '0') then
         counter <= (others=>'0');
         uart_data <= (others=>'0');
-
+        jtag_data <= (others=>'0');
         uart_state_reg <= "100" ;
+        jtag_state_reg <= "100" ;
+         state <= IDLE;
+         mem_counter <= (others=>'0');
     elsif(clk'event and clk = '1') then
         counter <= counter + 1;
         uart_state_reg <= uart_state_next;
+        jtag_state_reg <= jtag_state_next;
+        state<= state_next;
+        counter <= counter_next;
+        mem_counter <= mem_counter_next;
         if(uart_state_reg = 2) then
             uart_data <= data_rx;
+        end if;        
+        if(state = REG) then
+            jtag_data <= JTAG_IN;
         end if;
 
     end if;
 end process;
 
 led_en <= sw;
-led_input <= x"ff00ff00";
-rgb_en <= btn;
+led_input <=  x"000000FF" when jtag_state_reg = 0 else
+             x"0000FF00" when jtag_state_reg = 1 else
+             x"00FF0000" when jtag_state_reg = 2 else
+             x"FF000000" when jtag_state_reg = 3 else
+             x"FF0000FF" when jtag_state_reg = 4 else
+            x"FFFFFFFF";
+rgb_en <= "1111" when state = IDLE else btn;
 read_fifo <= '1' when uart_state_reg = 1 else '0';
-send_data <= '1' when uart_state_reg = 3 else bscan_rec;
-data_tx <= JTAG_IN when bscan_rec = '1' else uart_data;
+send_data <= '1' when uart_state_reg = 3 or jtag_state_reg<4 else btn(0);
+data_tx <= jtag_data(31 downto 24) when jtag_state_reg = 0 else
+            jtag_data(23 downto 16) when jtag_state_reg = 1 else
+            jtag_data(15 downto 8) when jtag_state_reg = 2 else
+            jtag_data(7 downto 0) when jtag_state_reg = 3 else
+            uart_data;
 
 uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
+jtag_state_next <= (others=>'0') when (send_flag = '1') else jtag_state_reg+1 when jtag_state_reg < 4 else jtag_state_reg;
 
 
-jtag_out <= uart_data;
+jtag_out <= x"000000" & uart_data;
+
+process (state,bscan_rec,jtag_data,jtag_state_reg,mem_counter)
+begin
+    send_flag <= '0';
+    mem_counter_next <= mem_counter;
+    state_next <= state;
+     case state is
+        when IDLE =>
+            mem_counter_next <= to_unsigned(0,12);
+            if(bscan_rec = '1') then
+                state_next <= REG;
+            end if;
+        when REG =>
+             state_next <= SEND;
+              mem_counter_next <= mem_counter+1;
+              send_flag <= '1';
+        when SEND =>
+
+             if(jtag_data = x"00000000") then
+                 state_next <= IDLE;
+             end if;
+             if( jtag_state_reg = 4) then
+                state_next <= REG;
+             end if;
+       end case;
+end process;
+
+addr_mem <= std_logic_vector(mem_counter);
 
 with counter(29 downto 26) select rgb0_input <=
     x"FFFFFF" when "0000",

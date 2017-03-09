@@ -71,10 +71,24 @@ component Reciever_Core is
            data_rx : out STD_LOGIC_VECTOR (7 downto 0));
 end component Reciever_Core;
 
-signal rec_data,full,rx_busy: std_logic;  
+signal rec_data,full,rx_busy,rx_reg: std_logic;  
 signal data_rx: STD_LOGIC_VECTOR(7 downto 0);
 
 begin
+
+
+process(clk,rst_n)
+begin
+    if(rst_n = '0') then
+         rx_reg   <= '0';
+    elsif(clk'event and clk = '1') then
+        rx_reg   <= rx;
+    end if;
+end process;
+
+
+
+
 FIFO_i: component FIFO
      Generic map(
         DATA_WIDTH  =>8,
@@ -98,7 +112,7 @@ RX_i: component Reciever_Core
       RST_N => RST_N,
       rec_data => rec_data,
       data_rx => data_rx,
-      rx => rx,
+      rx => rx_reg,
       rx_busy => rx_busy
     );
 
