@@ -50,7 +50,7 @@ architecture Behavioral of local_memory is
     type ram_type is array (2**ADDR_WIDTH-1 downto 0)
     of std_logic_vector (DATA_WIDTH-1 downto 0);
     signal ram: ram_type:= (
-    others => (others =>'0'));
+    others => x"00000000");
     signal addr_reg: std_logic_vector(ADDR_WIDTH-1 downto 0);
 
 begin

@@ -40,6 +40,7 @@ Port ( clk : in STD_LOGIC;
        send_data : in STD_LOGIC;
        data_tx : in STD_LOGIC_VECTOR (7 downto 0);
        Full	: out STD_LOGIC;
+       Empty_FIFO: out STD_LOGIC;
        tx : out STD_LOGIC);
 end UART_TX;
 
@@ -75,6 +76,7 @@ signal data_out,reg,reg_next :std_logic_vector(7 downto 0);
 type fsm is (READY_ST,READ_ST,REG_ST,SEND_ST,IDLE_ST);
 signal state,state_next: fsm;
 begin
+Empty_FIFO <= empty;
 FIFO_i: component FIFO
      Generic map(
         DATA_WIDTH  =>8,

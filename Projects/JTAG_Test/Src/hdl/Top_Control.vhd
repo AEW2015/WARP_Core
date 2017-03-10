@@ -35,7 +35,10 @@ entity Top_Control is
     Port ( clk : in STD_LOGIC;
            rst_n : in STD_LOGIC;
            empty : in STD_LOGIC;
+           full : in STD_LOGIC;
+           JTAG_EMTPY : in STD_LOGIC;
            read_fifo : out STD_LOGIC;
+           read_JTAG : out STD_LOGIC;
            --t_clk : out STD_LOGIC;
            sw : in STD_LOGIC_VECTOR (3 downto 0);
            bscan_rec : in STD_LOGIC;
@@ -107,19 +110,19 @@ led_input <=  x"000000FF" when jtag_state_reg = 0 else
 rgb_en <= "1111" when state = IDLE else btn;
 read_fifo <= '1' when uart_state_reg = 1 else '0';
 send_data <= '1' when uart_state_reg = 3 or jtag_state_reg<4 else btn(0);
-data_tx <= jtag_data(31 downto 24) when jtag_state_reg = 0 else
-            jtag_data(23 downto 16) when jtag_state_reg = 1 else
-            jtag_data(15 downto 8) when jtag_state_reg = 2 else
-            jtag_data(7 downto 0) when jtag_state_reg = 3 else
+data_tx <= JTAG_IN(31 downto 24) when jtag_state_reg = 0 else
+            JTAG_IN(23 downto 16) when jtag_state_reg = 1 else
+            JTAG_IN(15 downto 8) when jtag_state_reg = 2 else
+            JTAG_IN(7 downto 0) when jtag_state_reg = 3 else
             uart_data;
 
 uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
-jtag_state_next <= (others=>'0') when (send_flag = '1') else jtag_state_reg+1 when jtag_state_reg < 4 else jtag_state_reg;
-
+jtag_state_next <= (others=>'1') when (JTAG_EMTPY = '0' and jtag_state_reg = 4) else jtag_state_reg+1 when (jtag_state_reg < 4 or  jtag_state_reg = 7) else jtag_state_reg;
+read_JTAG <= '1' when (jtag_state_reg = 7) else '0';
 
 jtag_out <= x"000000" & uart_data;
 
-process (state,bscan_rec,jtag_data,jtag_state_reg,mem_counter)
+process (state,bscan_rec,jtag_data,jtag_state_reg,mem_counter,full)
 begin
     send_flag <= '0';
     mem_counter_next <= mem_counter;
@@ -139,7 +142,7 @@ begin
              if(jtag_data = x"00000000") then
                  state_next <= IDLE;
              end if;
-             if( jtag_state_reg = 4) then
+             if( jtag_state_reg = 4 and full = '1') then
                 state_next <= REG;
              end if;
        end case;

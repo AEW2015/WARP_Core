@@ -17,7 +17,6 @@ proc get_script_folder {} {
 variable script_folder
 set script_folder [_tcl::get_script_folder]
 
-
 ################################################################
 # START
 ################################################################
@@ -28,7 +27,7 @@ set script_folder [_tcl::get_script_folder]
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# LED_Control, RGB_Control, Top_Control, UART_RX, UART_TX, bscan_if, btn_control, btn_debounce, btn_debounce, btn_debounce, btn_debounce, btn_split
+# LED_Control, RGB_Control, Top_Control, UART_RX, UART_TX, bscan_if, local_memory, btn_control, btn_debounce, btn_debounce, btn_debounce, btn_debounce, btn_split
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -43,7 +42,6 @@ if { $list_projs eq "" } {
 }
 
 add_files ../Src/hdl/
-
 
 
 # CHANGE DESIGN NAME HERE
@@ -360,12 +358,27 @@ CONFIG.FREQ_HZ {100000000} \
      catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
      return 1
    }
-  
+    set_property -dict [ list \
+CONFIG.DATA_WIDTH {32} \
+CONFIG.INSTANCE_TCK_BUFG {true} \
+ ] $bscan_if_0
+
   # Create instance: buttons
   create_hier_cell_buttons [current_bd_instance .] buttons
 
+  # Create instance: local_memory_0, and set properties
+  set block_name local_memory
+  set block_cell_name local_memory_0
+  if { [catch {set local_memory_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $local_memory_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create port connections
-  connect_bd_net -net CLK100MHZ_1 [get_bd_ports CLK100MHZ] [get_bd_pins LED_Control_0/clk] [get_bd_pins RGB_Control_0/CLK] [get_bd_pins Top_Control_0/clk] [get_bd_pins UART_RX_0/clk] [get_bd_pins UART_TX_0/clk] [get_bd_pins bscan_if_0/tck_in] [get_bd_pins buttons/CLK100MHZ]
+  connect_bd_net -net CLK100MHZ_1 [get_bd_ports CLK100MHZ] [get_bd_pins LED_Control_0/clk] [get_bd_pins RGB_Control_0/CLK] [get_bd_pins Top_Control_0/clk] [get_bd_pins UART_RX_0/clk] [get_bd_pins UART_TX_0/clk] [get_bd_pins bscan_if_0/tck_in] [get_bd_pins buttons/CLK100MHZ] [get_bd_pins local_memory_0/clk]
   connect_bd_net -net LED_Control_0_led [get_bd_ports led] [get_bd_pins LED_Control_0/led]
   connect_bd_net -net RGB_Control_0_rgb0 [get_bd_ports rgb0] [get_bd_pins RGB_Control_0/rgb0]
   connect_bd_net -net RGB_Control_0_rgb1 [get_bd_ports rgb1] [get_bd_pins RGB_Control_0/rgb1]
@@ -374,9 +387,10 @@ CONFIG.FREQ_HZ {100000000} \
   connect_bd_net -net RST_N_1 [get_bd_ports rst_n] [get_bd_pins LED_Control_0/rst_n] [get_bd_pins RGB_Control_0/RST_N] [get_bd_pins Top_Control_0/rst_n] [get_bd_pins UART_RX_0/rst_n] [get_bd_pins UART_TX_0/rst_n] [get_bd_pins bscan_if_0/rst_n] [get_bd_pins buttons/rst_n]
   connect_bd_net -net SW_1 [get_bd_ports sw] [get_bd_pins Top_Control_0/sw]
   connect_bd_net -net Top_Control_0_JTAG_OUT [get_bd_pins Top_Control_0/JTAG_OUT] [get_bd_pins bscan_if_0/data_out]
+  connect_bd_net -net Top_Control_0_addr_mem [get_bd_pins Top_Control_0/addr_mem] [get_bd_pins local_memory_0/addr_out]
   connect_bd_net -net Top_Control_0_data_tx [get_bd_pins Top_Control_0/data_tx] [get_bd_pins UART_TX_0/data_tx]
   connect_bd_net -net Top_Control_0_led_en [get_bd_pins LED_Control_0/led_en] [get_bd_pins Top_Control_0/led_en]
-  connect_bd_net -net Top_Control_0_led_input [get_bd_pins LED_Control_0/led_input] [get_bd_pins Top_Control_0/led_input]
+  connect_bd_net -net Top_Control_0_read_JTAG [get_bd_pins Top_Control_0/read_JTAG] [get_bd_pins bscan_if_0/afifo_re]
   connect_bd_net -net Top_Control_0_read_fifo [get_bd_pins Top_Control_0/read_fifo] [get_bd_pins UART_RX_0/read_en]
   connect_bd_net -net Top_Control_0_rgb0_input [get_bd_pins RGB_Control_0/rgb0_input] [get_bd_pins Top_Control_0/rgb0_input]
   connect_bd_net -net Top_Control_0_rgb1_input [get_bd_pins RGB_Control_0/rgb1_input] [get_bd_pins Top_Control_0/rgb1_input]
@@ -386,9 +400,12 @@ CONFIG.FREQ_HZ {100000000} \
   connect_bd_net -net Top_Control_0_send_data [get_bd_pins Top_Control_0/send_data] [get_bd_pins UART_TX_0/send_data]
   connect_bd_net -net UART_RX_0_data_out [get_bd_pins Top_Control_0/data_rx] [get_bd_pins UART_RX_0/data_out]
   connect_bd_net -net UART_RX_0_empty [get_bd_pins Top_Control_0/empty] [get_bd_pins UART_RX_0/empty]
+  connect_bd_net -net UART_TX_0_Empty [get_bd_pins Top_Control_0/full] [get_bd_pins UART_TX_0/Empty_FIFO]
   connect_bd_net -net UART_TX_0_tx [get_bd_ports uart_tx] [get_bd_pins UART_TX_0/tx]
   connect_bd_net -net bscan_if_0_data_in [get_bd_pins Top_Control_0/JTAG_IN] [get_bd_pins bscan_if_0/data_in]
-  connect_bd_net -net bscan_if_0_data_in_update [get_bd_pins Top_Control_0/bscan_rec] [get_bd_pins bscan_if_0/data_in_update]
+  connect_bd_net -net bscan_if_0_data_in_update [get_bd_pins local_memory_0/we]
+  connect_bd_net -net bscan_if_0_empty [get_bd_pins Top_Control_0/JTAG_EMTPY] [get_bd_pins Top_Control_0/bscan_rec] [get_bd_pins bscan_if_0/empty]
+  connect_bd_net -net bscan_if_0_led_Debug [get_bd_pins LED_Control_0/led_input] [get_bd_pins Top_Control_0/led_input]
   connect_bd_net -net btn_1 [get_bd_ports btn] [get_bd_pins buttons/btn_in]
   connect_bd_net -net buttons_btn_out [get_bd_pins Top_Control_0/btn] [get_bd_pins buttons/btn_out]
   connect_bd_net -net uart_rx_1 [get_bd_ports uart_rx] [get_bd_pins UART_RX_0/rx]
@@ -399,52 +416,57 @@ CONFIG.FREQ_HZ {100000000} \
   regenerate_bd_layout -layout_string {
    guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
 #  -string -flagsOSRD
-preplace port uart_tx -pg 1 -y 430 -defaultsOSRD
-preplace port CLK100MHZ -pg 1 -y 530 -defaultsOSRD
-preplace port uart_rx -pg 1 -y 80 -defaultsOSRD
-preplace port rst_n -pg 1 -y 550 -defaultsOSRD
-preplace portBus sw -pg 1 -y 160 -defaultsOSRD
-preplace portBus btn -pg 1 -y 410 -defaultsOSRD
-preplace portBus rgb0 -pg 1 -y 220 -defaultsOSRD
-preplace portBus led -pg 1 -y 560 -defaultsOSRD
-preplace portBus rgb1 -pg 1 -y 240 -defaultsOSRD
-preplace portBus rgb2 -pg 1 -y 260 -defaultsOSRD
-preplace portBus rgb3 -pg 1 -y 280 -defaultsOSRD
-preplace inst bscan_if_0 -pg 1 -lvl 1 -y 240 -defaultsOSRD
-preplace inst buttons -pg 1 -lvl 1 -y 410 -defaultsOSRD
-preplace inst Top_Control_0 -pg 1 -lvl 2 -y 240 -defaultsOSRD
-preplace inst LED_Control_0 -pg 1 -lvl 3 -y 560 -defaultsOSRD
-preplace inst UART_TX_0 -pg 1 -lvl 3 -y 420 -defaultsOSRD
-preplace inst UART_RX_0 -pg 1 -lvl 1 -y 70 -defaultsOSRD
-preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 250 -defaultsOSRD
-preplace netloc Top_Control_0_led_input 1 2 1 680
+preplace port uart_tx -pg 1 -y 250 -defaultsOSRD
+preplace port CLK100MHZ -pg 1 -y 80 -defaultsOSRD
+preplace port uart_rx -pg 1 -y 290 -defaultsOSRD
+preplace port rst_n -pg 1 -y 520 -defaultsOSRD
+preplace portBus sw -pg 1 -y 360 -defaultsOSRD
+preplace portBus btn -pg 1 -y 450 -defaultsOSRD
+preplace portBus rgb0 -pg 1 -y 530 -defaultsOSRD
+preplace portBus led -pg 1 -y 70 -defaultsOSRD
+preplace portBus rgb1 -pg 1 -y 550 -defaultsOSRD
+preplace portBus rgb2 -pg 1 -y 570 -defaultsOSRD
+preplace portBus rgb3 -pg 1 -y 590 -defaultsOSRD
+preplace inst bscan_if_0 -pg 1 -lvl 1 -y 90 -defaultsOSRD
+preplace inst buttons -pg 1 -lvl 1 -y 450 -defaultsOSRD
+preplace inst Top_Control_0 -pg 1 -lvl 2 -y 350 -defaultsOSRD
+preplace inst LED_Control_0 -pg 1 -lvl 3 -y 70 -defaultsOSRD
+preplace inst UART_TX_0 -pg 1 -lvl 3 -y 230 -defaultsOSRD
+preplace inst UART_RX_0 -pg 1 -lvl 1 -y 280 -defaultsOSRD
+preplace inst local_memory_0 -pg 1 -lvl 3 -y 380 -defaultsOSRD
+preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 560 -defaultsOSRD
 preplace netloc btn_1 1 0 1 NJ
-preplace netloc Top_Control_0_read_fifo 1 0 3 40 150 320J 40 730
-preplace netloc RST_N_1 1 0 3 30 550 360 550 720
-preplace netloc buttons_btn_out 1 1 1 340
-preplace netloc UART_RX_0_empty 1 1 1 370
-preplace netloc Top_Control_0_rgb3_input 1 2 1 N
-preplace netloc Top_Control_0_rgb2_input 1 2 1 N
-preplace netloc Top_Control_0_send_data 1 2 1 730
-preplace netloc Top_Control_0_rgb1_input 1 2 1 N
+preplace netloc Top_Control_0_read_fifo 1 0 3 40 180 NJ 180 670
+preplace netloc RST_N_1 1 0 3 20 520 350 520 730
+preplace netloc buttons_btn_out 1 1 1 360
+preplace netloc UART_RX_0_empty 1 1 1 320
+preplace netloc Top_Control_0_rgb3_input 1 2 1 690
+preplace netloc Top_Control_0_rgb2_input 1 2 1 700
+preplace netloc Top_Control_0_addr_mem 1 2 1 760
+preplace netloc Top_Control_0_send_data 1 2 1 720
+preplace netloc Top_Control_0_rgb1_input 1 2 1 710
 preplace netloc RGB_Control_0_rgb0 1 3 1 NJ
-preplace netloc UART_RX_0_data_out 1 1 1 350
+preplace netloc bscan_if_0_led_Debug 1 2 1 740
+preplace netloc UART_RX_0_data_out 1 1 1 310
 preplace netloc RGB_Control_0_rgb1 1 3 1 NJ
-preplace netloc Top_Control_0_rgb0_input 1 2 1 N
+preplace netloc Top_Control_0_rgb0_input 1 2 1 720
 preplace netloc RGB_Control_0_rgb2 1 3 1 NJ
-preplace netloc Top_Control_0_led_en 1 2 1 690
+preplace netloc Top_Control_0_led_en 1 2 1 710
 preplace netloc RGB_Control_0_rgb3 1 3 1 NJ
+preplace netloc Top_Control_0_read_JTAG 1 0 3 30 10 NJ 10 690
+preplace netloc UART_TX_0_Empty 1 1 3 360 150 NJ 150 1030
 preplace netloc UART_TX_0_tx 1 3 1 NJ
-preplace netloc Top_Control_0_rgb_en 1 2 1 N
-preplace netloc Top_Control_0_data_tx 1 2 1 710
-preplace netloc CLK100MHZ_1 1 0 3 20 530 330 530 700
-preplace netloc bscan_if_0_data_in 1 1 1 320
+preplace netloc Top_Control_0_rgb_en 1 2 1 750
+preplace netloc Top_Control_0_data_tx 1 2 1 760
+preplace netloc CLK100MHZ_1 1 0 3 10 190 350 130 770
+preplace netloc bscan_if_0_data_in 1 1 1 330
 preplace netloc uart_rx_1 1 0 1 NJ
 preplace netloc LED_Control_0_led 1 3 1 NJ
-preplace netloc Top_Control_0_JTAG_OUT 1 0 3 40 330 320J 400 670
-preplace netloc bscan_if_0_data_in_update 1 1 1 N
-preplace netloc SW_1 1 0 2 NJ 160 340J
-levelinfo -pg 1 0 180 530 860 1010 -top 0 -bot 640
+preplace netloc bscan_if_0_empty 1 1 1 340
+preplace netloc Top_Control_0_JTAG_OUT 1 0 3 40 170 NJ 170 680
+preplace netloc bscan_if_0_data_in_update 1 2 1 N
+preplace netloc SW_1 1 0 2 NJ 360 NJ
+levelinfo -pg 1 -10 180 530 900 1050 -top 0 -bot 670
 ",
 }
 
@@ -472,4 +494,3 @@ update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
 add_files -fileset constrs_1 -norecurse ../Src/const/Arty_Master.xdc
-
