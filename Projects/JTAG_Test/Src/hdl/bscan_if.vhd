@@ -32,9 +32,10 @@ entity bscan_if is
 		--led_Debug : out std_logic_Vector(31 downto 0); -- data to receive from JTAG
 		tck_out : out std_logic;                               -- JTAG tck signal used by logic (no matter where it comes from)
 		--data_in_update : out std_logic;                        -- Signal indicating data in has been updated
-		empty : out std_logic;                        -- Signal indicating data in has been updated
-		afifo_re : in std_logic                        -- Signal indicating data in has been updated
-		--data_finished : out std_logic                       -- Signal indicating that data out has been captured  
+		-- empty : out std_logic;                        -- Signal indicating data in has been updated
+		mem_we : out std_logic;                        -- Signal indicating data in has been updated
+		--afifo_re : in std_logic;                        -- Signal indicating data in has been updated
+		data_finished : out std_logic                       -- Signal indicating that data out has been captured  
 	);
 end bscan_if;
 
@@ -65,6 +66,9 @@ end component;
 	
 	signal drck, shift, tdi, tdo, jtag_reset, capture, update, tck_int, tck_bscan : std_logic;
 	signal aFifo_we,aFifo_we_next,rst,password,password_next: std_logic;
+	signal counter_rst,counter_rst_reg,counter_rst_reg_2: std_logic;
+	signal data_done,data_done_reg,data_done_reg_2: std_logic;
+	signal afifo_re,empty,afifo_re_reg: std_logic;
 	signal shift_reg,shift_next,shift_s1,shift_s2,data_reg,data_next,test: std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
 	--signal data_out_latch, data_out_shift : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
 	--signal data_in_latch, data_in_shift : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
@@ -75,7 +79,7 @@ end component;
     type fsm_j is (IDLE,SEND,TEST_REG);
     signal jstate,jstate_next: fsm_j;
     signal counter,counter_next: unsigned(3 downto 0);
-    signal mem_counter,mem_counter_next: unsigned(11 downto 0);
+    signal mem_counter,mem_counter_next,mem_counter_reg: unsigned(11 downto 0);
     signal bitcount,bitcount_next,bitcount_s1,bitcount_s2 : unsigned(4 downto 0) := (others => '0');
     
 begin
@@ -161,30 +165,7 @@ begin
 	--  3. Use an input clock (from another BSCAN module)
 
 
---we want the shift register to change ever 32 bits, and to end after software set length...
---	process(tck_int)
---	begin
---		if tck_int'event and tck_int='1' then
---			--data_out_capture <= '0';
---			if sel = '1' then
---                if(shift_reg = x"DEADBEEF") then
---                    password <= '1';
---                end if;
---				if capture = '1' then
---					-- Latch all of the data into the shift register that should be sent out of the BSCAN.
---					-- This is done BEFORE the data is shifted (to get the correct data loaded)
---                    shift_reg <= x"00000000";
---					bitcount <= to_unsigned(0,5);
---					password <= '0';
---					--data_out_capture <= '1';
---				elsif shift = '1' then
---					-- Perform a shift of the shift register
---					shift_reg <= shift_reg(DATA_WIDTH-2 downto 0) & tdi;
---					bitcount <= bitcount + 1;
---				end if;
---			end if;
---		end if;
---	end process;
+
 	process(tck_int)
 begin
     if tck_int'event and tck_int='1' then
@@ -199,6 +180,7 @@ end process;
 	--data_out_capture <= capture;
 	tdo <= shift_reg(DATA_WIDTH-1);
 
+
 process (jstate,bitcount,aFifo_we,sel,capture,update,shift_reg,shift,tdi,data_reg,password)
 begin
     jstate_next<=jstate;
@@ -207,12 +189,17 @@ begin
     shift_next <= shift_reg;
     data_next <= data_reg;
     password_next <= password;
+    counter_rst <= '0';
+    data_done <= '0';
      case jstate is
         when IDLE =>
             if(sel = '1' and capture = '1') then
                 shift_next <= x"00000000";
                 bitcount_next <= to_unsigned(0,5);
                 jstate_next <= send;
+                --signal restart counter
+                counter_rst <= '1';
+                
             end if; 
         when SEND =>
             if(sel = '1' and shift = '1') then
@@ -223,17 +210,18 @@ begin
                    data_next <= shift_reg; --x"54657374"               
                 end if;
                 if(bitcount = 0 and shift_reg=x"deadbeef") then -- and shift_reg=x"deadbeef"
-                   aFifo_we_next<='1';
-                   data_next <= x"54657374"; --x"54657374"
+                   --aFifo_we_next<='1';
+                   --data_next <= x"54657374"; --x"54657374"
                    password_next <= '1';
                 end if;
             end if;
         when TEST_REG =>
        end case;
      if(sel = '0') then
-         if(password = '1') then -- and shift_reg=x"deadbeef"
+         if(password = '1') then 
            aFifo_we_next<='1';
-           data_next <= shift_reg; --x"54657374"               
+           data_next <= shift_reg;     
+           data_done <= '1';         
         end if;
         jstate_next <= IDLE;
         password_next <= '0';
@@ -289,9 +277,31 @@ aFifo_inst : aFifo
 	 );
 
 
+process(tck_in,rst_n)
+begin
+    if(rst_n = '0') then
+         mem_counter <= (others=>'0');
+    elsif(tck_in'event and tck_in = '1') then
+         mem_counter <= mem_counter_next;
+         mem_counter_reg <= mem_counter;
+        counter_rst_reg <= counter_rst;
+        counter_rst_reg_2 <= counter_rst_reg;
+        data_done_reg <= data_done;
+        data_done_reg_2 <= data_done_reg;
+        afifo_re_reg <= afifo_re;
+    end if;
+end process;
+
+mem_counter_next <= (others => '0') when counter_rst_reg_2 = '1' else
+                    mem_counter+1   when afifo_re = '1'          else
+                    mem_counter;
+afifo_re <= not empty;
+
+mem_we <= afifo_re_reg;
 
 
 
+data_finished <= data_done_reg_2;
 rst <= not rst_n;
 
 
@@ -300,100 +310,7 @@ rst <= not rst_n;
 
 
 
-
-
-
-
-
-
---process (tck_in,rst_n)
---begin
---    if(rst_n ='0') then
---        state <= IDLE;
---        counter <= (others=>'0');
---        mem_counter <= (others=>'0');
---        sync1 <= '0';
---        sync2 <= '0';  
---        bitcount_s1 <= (others =>'0');  
---        bitcount_s2 <= (others =>'0');  
---        shift_s1 <= (others =>'0');  
---        shift_s2 <= (others =>'0'); 
---        data_reg <= (others =>'0'); 
-  
---    elsif  tck_in'event and tck_in ='1' then
---        state<= state_next;
---        counter <= counter_next;
---        mem_counter <= mem_counter_next;
---        sync1 <= update;
---        sync2 <= sync1;
---        bitcount_s1 <= bitcount;  
---        bitcount_s2 <= bitcount_s1;    
---        shift_s1 <= shift_reg;    
---        shift_s2 <= shift_s1;
---        data_reg <= data_next;    
---    end if;
---end process;
 	
---process (state,sync2,test,bitcount_s2,counter,mem_counter,data_next,data_reg)
---begin
---    counter_next <= counter;
---    mem_counter_next <= mem_counter;
---    state_next <= state;
---    data_in_update <= '0';
---    data_finished <= '0';
---    data_next <= data_reg;
---     case state is
---        when IDLE =>
---            mem_counter_next <= to_unsigned(0,12);
---            if(bitcount_s2 = 0 and test = x"DEADBEEF") then
---                 data_next <= "0011" & std_logic_vector(counter) & x"3a2020";
---                state_next <= SEND;
---            end if;
---        when SEND =>
---            data_in_update <= '1';
---            state_next <= DELAY;
---            counter_next <= counter+1;
---            mem_counter_next <= mem_counter+1;
---       when DELAY =>
---             if(bitcount_s2 /= 0) then
---                      state_next <= DATA;
---             end if;
---        when DATA =>
---            if(bitcount_s2 = 0 ) then
---                state_next <= D_SEND;
---                data_next <= test;
---            end if;
---            if(sync2 = '1') then
---                state_next <= DONE;
---            end if;
---        when D_SEND =>
---          data_in_update <= '1';
---          state_next <= PASS;
---          mem_counter_next <= mem_counter+1;
---        when PASS =>
---            if(bitcount_s2 /= 0) then
---              state_next <= DATA;
---            end if;
---        when DONE =>
---          data_finished <= '1';
---          state_next <= IDLE;
---       end case;
---end process;
-
---data_in <= data_reg;
---led_Debug <=  x"000000FF" when state = IDLE else
---             x"0000FF00" when state = SEND else
---             x"00FF0000" when state = DELAY else
---             x"FF000000" when state = DATA else
---             x"FF0000FF" when state = D_SEND else
---             x"00FFFF00" when state = PASS else
---             x"00FFFFFF" when state = DONE else
---            x"FFFFFFFF";
-
-
-
-
-	
-addr <= std_logic_vector(mem_counter);	
+addr <= std_logic_vector(mem_counter_reg);	
 
 end rtl;

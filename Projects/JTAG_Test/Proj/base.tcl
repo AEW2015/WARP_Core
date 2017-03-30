@@ -43,7 +43,6 @@ if { $list_projs eq "" } {
 
 add_files ../Src/hdl/
 
-
 # CHANGE DESIGN NAME HERE
 set design_name system
 
@@ -239,6 +238,36 @@ proc create_hier_cell_buttons { parentCell nameHier } {
   connect_bd_net -net btn_split_0_btn3 [get_bd_pins btn_debounce_3/btn_in] [get_bd_pins btn_split_0/btn3]
   connect_bd_net -net rst_n_1 [get_bd_pins rst_n] [get_bd_pins btn_control_0/rst_n] [get_bd_pins btn_debounce_0/rst_n] [get_bd_pins btn_debounce_1/rst_n] [get_bd_pins btn_debounce_2/rst_n] [get_bd_pins btn_debounce_3/rst_n]
 
+  # Perform GUI Layout
+  regenerate_bd_layout -hierarchy [get_bd_cells /buttons] -layout_string {
+   guistr: "# # String gsaved with Nlview 6.6.5b  2016-09-06 bk=1.3687 VDI=39 GEI=35 GUI=JA:1.6
+#  -string -flagsOSRD
+preplace port CLK100MHZ -pg 1 -y 40 -defaultsOSRD
+preplace port rst_n -pg 1 -y 290 -defaultsOSRD
+preplace portBus btn_out -pg 1 -y 290 -defaultsOSRD
+preplace portBus btn_in -pg 1 -y 210 -defaultsOSRD
+preplace inst btn_debounce_0 -pg 1 -lvl 2 -y 60 -defaultsOSRD
+preplace inst btn_control_0 -pg 1 -lvl 3 -y 290 -defaultsOSRD
+preplace inst btn_debounce_1 -pg 1 -lvl 2 -y 180 -defaultsOSRD
+preplace inst btn_debounce_2 -pg 1 -lvl 2 -y 330 -defaultsOSRD
+preplace inst btn_debounce_3 -pg 1 -lvl 2 -y 450 -defaultsOSRD
+preplace inst btn_split_0 -pg 1 -lvl 1 -y 210 -defaultsOSRD
+preplace netloc btn_split_0_btn1 1 1 1 N
+preplace netloc btn_split_0_btn2 1 1 1 240
+preplace netloc btn_split_0_btn3 1 1 1 220
+preplace netloc btn_debounce_1_btn_out 1 2 1 440
+preplace netloc btn_control_0_btn_out 1 3 1 N
+preplace netloc btn_debounce_3_btn_out 1 2 1 440
+preplace netloc btn_debounce_2_btn_out 1 2 1 440
+preplace netloc rst_n_1 1 0 3 20J 60 230 260 NJ
+preplace netloc btn_in_1 1 0 1 NJ
+preplace netloc CLK100MHZ_1 1 0 3 NJ 40 250 250 430J
+preplace netloc btn_split_0_btn0 1 1 1 220
+preplace netloc btn_debounce_0_btn_out 1 2 1 450
+levelinfo -pg 1 0 120 340 560 690 -top 0 -bot 520
+",
+}
+
   # Restore current instance
   current_bd_instance $oldCurInst
 }
@@ -390,7 +419,6 @@ CONFIG.INSTANCE_TCK_BUFG {true} \
   connect_bd_net -net Top_Control_0_addr_mem [get_bd_pins Top_Control_0/addr_mem] [get_bd_pins local_memory_0/addr_out]
   connect_bd_net -net Top_Control_0_data_tx [get_bd_pins Top_Control_0/data_tx] [get_bd_pins UART_TX_0/data_tx]
   connect_bd_net -net Top_Control_0_led_en [get_bd_pins LED_Control_0/led_en] [get_bd_pins Top_Control_0/led_en]
-  connect_bd_net -net Top_Control_0_read_JTAG [get_bd_pins Top_Control_0/read_JTAG] [get_bd_pins bscan_if_0/afifo_re]
   connect_bd_net -net Top_Control_0_read_fifo [get_bd_pins Top_Control_0/read_fifo] [get_bd_pins UART_RX_0/read_en]
   connect_bd_net -net Top_Control_0_rgb0_input [get_bd_pins RGB_Control_0/rgb0_input] [get_bd_pins Top_Control_0/rgb0_input]
   connect_bd_net -net Top_Control_0_rgb1_input [get_bd_pins RGB_Control_0/rgb1_input] [get_bd_pins Top_Control_0/rgb1_input]
@@ -402,12 +430,15 @@ CONFIG.INSTANCE_TCK_BUFG {true} \
   connect_bd_net -net UART_RX_0_empty [get_bd_pins Top_Control_0/empty] [get_bd_pins UART_RX_0/empty]
   connect_bd_net -net UART_TX_0_Empty [get_bd_pins Top_Control_0/full] [get_bd_pins UART_TX_0/Empty_FIFO]
   connect_bd_net -net UART_TX_0_tx [get_bd_ports uart_tx] [get_bd_pins UART_TX_0/tx]
-  connect_bd_net -net bscan_if_0_data_in [get_bd_pins Top_Control_0/JTAG_IN] [get_bd_pins bscan_if_0/data_in]
-  connect_bd_net -net bscan_if_0_data_in_update [get_bd_pins local_memory_0/we]
-  connect_bd_net -net bscan_if_0_empty [get_bd_pins Top_Control_0/JTAG_EMTPY] [get_bd_pins Top_Control_0/bscan_rec] [get_bd_pins bscan_if_0/empty]
+  connect_bd_net -net bscan_if_0_addr [get_bd_pins bscan_if_0/addr] [get_bd_pins local_memory_0/addr_in]
+  connect_bd_net -net bscan_if_0_data_finished [get_bd_pins Top_Control_0/bscan_rec] [get_bd_pins bscan_if_0/data_finished]
+  connect_bd_net -net bscan_if_0_data_in [get_bd_pins bscan_if_0/data_in] [get_bd_pins local_memory_0/din]
+  connect_bd_net -net bscan_if_0_data_in_update [get_bd_pins bscan_if_0/mem_we] [get_bd_pins local_memory_0/we]
+  connect_bd_net -net bscan_if_0_empty [get_bd_pins Top_Control_0/JTAG_EMTPY]
   connect_bd_net -net bscan_if_0_led_Debug [get_bd_pins LED_Control_0/led_input] [get_bd_pins Top_Control_0/led_input]
   connect_bd_net -net btn_1 [get_bd_ports btn] [get_bd_pins buttons/btn_in]
   connect_bd_net -net buttons_btn_out [get_bd_pins Top_Control_0/btn] [get_bd_pins buttons/btn_out]
+  connect_bd_net -net local_memory_0_dout [get_bd_pins Top_Control_0/JTAG_IN] [get_bd_pins local_memory_0/dout]
   connect_bd_net -net uart_rx_1 [get_bd_ports uart_rx] [get_bd_pins UART_RX_0/rx]
 
   # Create address segments
@@ -433,40 +464,42 @@ preplace inst Top_Control_0 -pg 1 -lvl 2 -y 350 -defaultsOSRD
 preplace inst LED_Control_0 -pg 1 -lvl 3 -y 70 -defaultsOSRD
 preplace inst UART_TX_0 -pg 1 -lvl 3 -y 230 -defaultsOSRD
 preplace inst UART_RX_0 -pg 1 -lvl 1 -y 280 -defaultsOSRD
-preplace inst local_memory_0 -pg 1 -lvl 3 -y 380 -defaultsOSRD
-preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 560 -defaultsOSRD
+preplace inst local_memory_0 -pg 1 -lvl 3 -y 470 -defaultsOSRD
+preplace inst RGB_Control_0 -pg 1 -lvl 3 -y 650 -defaultsOSRD
 preplace netloc btn_1 1 0 1 NJ
-preplace netloc Top_Control_0_read_fifo 1 0 3 40 180 NJ 180 670
-preplace netloc RST_N_1 1 0 3 20 520 350 520 730
-preplace netloc buttons_btn_out 1 1 1 360
-preplace netloc UART_RX_0_empty 1 1 1 320
-preplace netloc Top_Control_0_rgb3_input 1 2 1 690
-preplace netloc Top_Control_0_rgb2_input 1 2 1 700
-preplace netloc Top_Control_0_addr_mem 1 2 1 760
-preplace netloc Top_Control_0_send_data 1 2 1 720
-preplace netloc Top_Control_0_rgb1_input 1 2 1 710
-preplace netloc RGB_Control_0_rgb0 1 3 1 NJ
+preplace netloc Top_Control_0_read_fifo 1 0 3 30 0 NJ 0 680
+preplace netloc RST_N_1 1 0 3 20 610 350 610 760
+preplace netloc buttons_btn_out 1 1 1 330
+preplace netloc UART_RX_0_empty 1 1 1 330
+preplace netloc Top_Control_0_rgb3_input 1 2 1 680
+preplace netloc Top_Control_0_rgb2_input 1 2 1 690
+preplace netloc bscan_if_0_addr 1 1 2 NJ 70 810
+preplace netloc Top_Control_0_addr_mem 1 2 1 770
+preplace netloc Top_Control_0_send_data 1 2 1 700
+preplace netloc Top_Control_0_rgb1_input 1 2 1 700
+preplace netloc RGB_Control_0_rgb0 1 3 1 1080J
 preplace netloc bscan_if_0_led_Debug 1 2 1 740
 preplace netloc UART_RX_0_data_out 1 1 1 310
-preplace netloc RGB_Control_0_rgb1 1 3 1 NJ
-preplace netloc Top_Control_0_rgb0_input 1 2 1 720
-preplace netloc RGB_Control_0_rgb2 1 3 1 NJ
-preplace netloc Top_Control_0_led_en 1 2 1 710
-preplace netloc RGB_Control_0_rgb3 1 3 1 NJ
-preplace netloc Top_Control_0_read_JTAG 1 0 3 30 10 NJ 10 690
-preplace netloc UART_TX_0_Empty 1 1 3 360 150 NJ 150 1030
+preplace netloc RGB_Control_0_rgb1 1 3 1 1090J
+preplace netloc Top_Control_0_rgb0_input 1 2 1 710
+preplace netloc RGB_Control_0_rgb2 1 3 1 1100J
+preplace netloc local_memory_0_dout 1 1 3 360 510 780J 380 1080
+preplace netloc Top_Control_0_led_en 1 2 1 690
+preplace netloc RGB_Control_0_rgb3 1 3 1 1110J
+preplace netloc bscan_if_0_data_finished 1 1 1 340
+preplace netloc UART_TX_0_Empty 1 1 3 360 150 NJ 150 1080
 preplace netloc UART_TX_0_tx 1 3 1 NJ
-preplace netloc Top_Control_0_rgb_en 1 2 1 750
-preplace netloc Top_Control_0_data_tx 1 2 1 760
-preplace netloc CLK100MHZ_1 1 0 3 10 190 350 130 770
-preplace netloc bscan_if_0_data_in 1 1 1 330
+preplace netloc Top_Control_0_rgb_en 1 2 1 730
+preplace netloc Top_Control_0_data_tx 1 2 1 750
+preplace netloc CLK100MHZ_1 1 0 3 10 590 320 590 720
+preplace netloc bscan_if_0_data_in 1 1 2 NJ 50 790
 preplace netloc uart_rx_1 1 0 1 NJ
 preplace netloc LED_Control_0_led 1 3 1 NJ
-preplace netloc bscan_if_0_empty 1 1 1 340
-preplace netloc Top_Control_0_JTAG_OUT 1 0 3 40 170 NJ 170 680
-preplace netloc bscan_if_0_data_in_update 1 2 1 N
+preplace netloc bscan_if_0_empty 1 1 1 N
+preplace netloc Top_Control_0_JTAG_OUT 1 0 3 40 190 NJ 190 670
+preplace netloc bscan_if_0_data_in_update 1 1 2 NJ 110 800
 preplace netloc SW_1 1 0 2 NJ 360 NJ
-levelinfo -pg 1 -10 180 530 900 1050 -top 0 -bot 670
+levelinfo -pg 1 -10 180 530 950 1130 -top -10 -bot 760
 ",
 }
 
@@ -494,3 +527,4 @@ update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 
 add_files -fileset constrs_1 -norecurse ../Src/const/Arty_Master.xdc
+

@@ -47,9 +47,14 @@ port(
 end local_memory;
 
 architecture Behavioral of local_memory is
-    type ram_type is array (2**ADDR_WIDTH-1 downto 0)
+    type ram_type is array (0 to 2**ADDR_WIDTH-1)
     of std_logic_vector (DATA_WIDTH-1 downto 0);
     signal ram: ram_type:= (
+    x"41414141",
+    x"42414141",
+    x"43424141",
+    x"44434241",
+    x"45444342",
     others => x"00000000");
     signal addr_reg: std_logic_vector(ADDR_WIDTH-1 downto 0);
 
