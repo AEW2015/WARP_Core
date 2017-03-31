@@ -25,16 +25,15 @@ entity bscan_if is
 	);
 	port(
 		data_out : in std_logic_vector(DATA_WIDTH-1 downto 0); -- data to send out of JTAG
-		tck_in  : in std_logic;                                -- Input clock for logic (if clock comes from outside)
+		clk  : in std_logic;                                -- Input clock for logic (if clock comes from outside)
 		rst_n  : in std_logic;                                -- Input clock for logic (if clock comes from outside)
 		data_in : out std_logic_Vector(DATA_WIDTH-1 downto 0); -- data to receive from JTAG
 		addr : out std_logic_Vector(11 downto 0); -- data to receive from JTAG
-		--led_Debug : out std_logic_Vector(31 downto 0); -- data to receive from JTAG
-		tck_out : out std_logic;                               -- JTAG tck signal used by logic (no matter where it comes from)
-		--data_in_update : out std_logic;                        -- Signal indicating data in has been updated
-		-- empty : out std_logic;                        -- Signal indicating data in has been updated
+
+	
+
 		mem_we : out std_logic;                        -- Signal indicating data in has been updated
-		--afifo_re : in std_logic;                        -- Signal indicating data in has been updated
+		
 		data_finished : out std_logic                       -- Signal indicating that data out has been captured  
 	);
 end bscan_if;
@@ -64,15 +63,12 @@ end component;
 	
 	constant VERSION : Natural := 1;
 	
-	signal drck, shift, tdi, tdo, jtag_reset, capture, update, tck_int, tck_bscan : std_logic;
+	signal drck, shift, tdi, tdo, jtag_reset, capture, update, jtag_clk, tck_bscan : std_logic;
 	signal aFifo_we,aFifo_we_next,rst,password,password_next: std_logic;
 	signal counter_rst,counter_rst_reg,counter_rst_reg_2: std_logic;
 	signal data_done,data_done_reg,data_done_reg_2: std_logic;
 	signal afifo_re,empty,afifo_re_reg: std_logic;
 	signal shift_reg,shift_next,shift_s1,shift_s2,data_reg,data_next,test: std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
-	--signal data_out_latch, data_out_shift : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
-	--signal data_in_latch, data_in_shift : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
-	--signal data_in_latch : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
 	signal sel,sync1,sync2 : std_logic;
 	type fsm is (IDLE,SEND,DELAY,DATA,D_SEND,PASS,DONE);
     signal state,state_next: fsm;
@@ -129,28 +125,23 @@ begin
 	 );
 	end generate;
 
-	-- External TCK 
-	use_external_tck_gen : if USE_EXTERNAL_TCK = true generate
-		tck_int <= tck_in;
-		tck_out <= tck_in;
-	end generate;
 	
 	-- Internal TCK
 	use_internal_tck : if USE_EXTERNAL_TCK = false generate
 	
 		
 		no_tck_bufg : if INSTANCE_TCK_BUFG=false generate
-			tck_int <= tck_bscan;
+			jtag_clk <= tck_bscan;
 		end generate;
 		
 		tck_bufg : if INSTANCE_TCK_BUFG=true generate
 			tck_bufg : BUFG
 				port map (
-					O => tck_int,
+					O => jtag_clk,
 					I => tck_bscan
 			);		
 		end generate;
-		tck_out <= tck_int;
+		
 	end generate;
 	
 	
@@ -166,9 +157,9 @@ begin
 
 
 
-	process(tck_int)
+	process(jtag_clk)
 begin
-    if tck_int'event and tck_int='1' then
+    if jtag_clk'event and jtag_clk='1' then
         jstate<=jstate_next;
         bitcount<=bitcount_next;
         aFifo_we<=aFifo_we_next;
@@ -177,7 +168,6 @@ begin
         password <= password_next;
     end if;
 end process;
-	--data_out_capture <= capture;
 	tdo <= shift_reg(DATA_WIDTH-1);
 
 
@@ -229,32 +219,6 @@ begin
 end process;
 
 
---We don't need input
-	----------------------------
-	-- Input Data
-	----------------------------
-	input_gen : if USE_INPUT_REGISTER generate
-
-
-		process(tck_int,update,sel)
-		begin
-			if tck_int'event and tck_int = '1' then
-				--data_in_update <= '0';
-			end if;
---------------------------------------------------------------------------------------------
-			if update = '1' and sel = '1' then
-				--data_in_update <= '1';
-				--data_in <= shift_reg;
-			end if;
-		end process;
-
-	end generate;
-	
-	no_input_gen : if USE_INPUT_REGISTER = false generate
-		--data_in <= (others => '0');
-		--data_in_update <= '0';
-	end generate;
-
 aFifo_inst : aFifo
 	 generic map (
 		 DATA_WIDTH => 32,
@@ -266,22 +230,22 @@ aFifo_inst : aFifo
          Data_out    => data_in,
          Empty_out   => empty,
          ReadEn_in   => afifo_re,
-         RClk        => tck_in,
+         RClk        => clk,
          -- Writing port.
          Data_in     => data_reg,
          Full_out    => open,
          WriteEn_in  => aFifo_we,
-         WClk        => tck_int,
+         WClk        => jtag_clk,
       
          Clear_in   => rst
 	 );
 
 
-process(tck_in,rst_n)
+process(clk,rst_n)
 begin
     if(rst_n = '0') then
          mem_counter <= (others=>'0');
-    elsif(tck_in'event and tck_in = '1') then
+    elsif(clk'event and clk = '1') then
          mem_counter <= mem_counter_next;
          mem_counter_reg <= mem_counter;
         counter_rst_reg <= counter_rst;
@@ -304,13 +268,6 @@ mem_we <= afifo_re_reg;
 data_finished <= data_done_reg_2;
 rst <= not rst_n;
 
-
-
-
-
-
-
-	
 addr <= std_logic_vector(mem_counter_reg);	
 
 end rtl;

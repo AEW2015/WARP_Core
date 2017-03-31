@@ -36,10 +36,7 @@ entity Top_Control is
            rst_n : in STD_LOGIC;
            empty : in STD_LOGIC;
            full : in STD_LOGIC;
-           JTAG_EMTPY : in STD_LOGIC;
            read_fifo : out STD_LOGIC;
-          -- read_JTAG : out STD_LOGIC;
-           --t_clk : out STD_LOGIC;
            sw : in STD_LOGIC_VECTOR (3 downto 0);
            bscan_rec : in STD_LOGIC;
            btn : in STD_LOGIC_VECTOR (3 downto 0);
@@ -67,7 +64,7 @@ architecture Behavioral of Top_Control is
     signal decode_output:std_logic_vector(7 downto 0):=(others=>'0');
     signal mem_data:std_logic_vector(31 downto 0):=(others=>'0');
     signal uart_state_reg,uart_state_next:unsigned(2 downto 0):=(others=>'0');
-   -- signal jtag_state_reg,jtag_state_next:unsigned(2 downto 0):=(others=>'0');
+
     
     type fsm is (IDLE,REG,SEND0,SEND1,SEND2,SEND3,SEND4,SEND5,SEND6,SEND7,SEND8);
         signal state,state_next: fsm;
@@ -81,17 +78,17 @@ begin
     if(rst_n = '0') then
         counter <= (others=>'0');
         uart_data <= (others=>'0');
-        --jtag_data <= (others=>'0');
+
         uart_state_reg <= "100" ;
-        --jtag_state_reg <= "100" ;
+
          state <= IDLE;
          mem_counter <= (others=>'0');
     elsif(clk'event and clk = '1') then
         counter <= counter + 1;
         uart_state_reg <= uart_state_next;
-        --jtag_state_reg <= jtag_state_next;
+
         state<= state_next;
-        counter <= counter_next;
+
         mem_counter <= mem_counter_next;
         if(uart_state_reg = 2) then
             uart_data <= data_rx;
@@ -104,23 +101,16 @@ begin
 end process;
 
 led_en <= sw;
-led_input <=  x"FFFFFFFF";
+led_input <=  std_logic_vector(counter(43 downto 12));
 rgb_en <=  btn;
 read_fifo <= '1' when uart_state_reg = 1 else '0';
 send_data <= '1' when uart_state_reg = 3 or send_flag = '1' else '0';
 data_tx <= state_data when send_flag = '1' else
             uart_data;
---data_tx <= JTAG_IN(31 downto 24) when jtag_state_reg = 0 else
---            JTAG_IN(23 downto 16) when jtag_state_reg = 1 else
---            JTAG_IN(15 downto 8) when jtag_state_reg = 2 else
---            JTAG_IN(7 downto 0) when jtag_state_reg = 3 else
---            uart_data;
 
 uart_state_next <= (others=>'0') when (uart_state_reg >= 4 and ( (not empty) = '1')) else uart_state_reg+1 when uart_state_reg < 4 else uart_state_reg;
---jtag_state_next <= (others=>'1') when (JTAG_EMTPY = '0' and jtag_state_reg = 4) else jtag_state_reg+1 when (jtag_state_reg < 4 or  jtag_state_reg = 7) else jtag_state_reg;
---read_JTAG <= '1' when (jtag_state_reg = 7) else '0';
 
-jtag_out <= x"000000" & uart_data;
+jtag_out <= x"00000000";
 
 process (state,bscan_rec,mem_counter,full,decode_output,mem_data,btn)
 begin
