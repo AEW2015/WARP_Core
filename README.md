@@ -1,5 +1,5 @@
 # WARP_Core
-Wilson Artix-7 RISC Processor Core
+Wilson AXI RISCV Processor Core
 
 
 ## News
