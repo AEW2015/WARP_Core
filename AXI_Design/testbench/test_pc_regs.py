@@ -23,6 +23,7 @@ def run_test(dut,write_num=None,test_setting=None):
 	dut.rs1_addr = 0
 	dut.rs2_addr = 0
 	dut.rd_data = 0
+	#dut.gpregs
 	dut.we = 0
 	yield Timer(10)
 	dut._log.info("Resetting DUT")
@@ -108,7 +109,7 @@ def random_write_counts(min_size=1, max_size=0xFF, tests=10):
 
 factory = TestFactory(run_test)
 factory.add_option("write_num", random_write_counts())
-factory.add_option("test_setting", ["High","Low","Z"])
+#factory.add_option("test_setting", ["High","Low","Z"])
 factory.generate_tests()
 
 
