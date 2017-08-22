@@ -4,18 +4,19 @@ import logging
 from cocotb.clock import Clock
 from cocotb.triggers import Timer, RisingEdge, ReadOnly
 from cocotb.result import TestFailure, TestSuccess
+from cocotb.regression import TestFactory
 import cocotb.wavedrom
+from cocotb.generators.byte import random_data, get_bytes
 
 
-
-@cocotb.test()
-def test_pc_regs(dut):
+@cocotb.coroutine
+def run_test(dut,write_num=None,test_setting=None):
 	"""
 	Try accessing the design
 	"""
 	data = [0] * 32
 	
-
+	
 	cocotb.fork(Clock(dut.clk, 2).start())
 	dut._log.info("Running test!")
 	dut.rst = 1
@@ -39,7 +40,7 @@ def test_pc_regs(dut):
 			raise TestFailure ("rs2 [%d] expected: 0x%08x acutal:0x%08x" %(i+16,data[i+16],dut.rs2_data))
 
 	dut._log.info("Write test 1")
-	for j in xrange(0,0xff):
+	for j in xrange(0,write_num):
 		dut.rd_data = j<<24 | j<<16 | j<<8 | j
 		dut.rd_addr = j%32
 		data[j%32]  = j<<24 | j<<16 | j<<8 | j
@@ -74,7 +75,7 @@ def test_pc_regs(dut):
 			raise TestFailure ("rs2 [%d] expected: 0x%08x acutal:0x%08x" %(i+16,data[i+16],dut.rs2_data))
 
 	dut._log.info("Write test 2")
-	for j in xrange(0,0xff):
+	for j in xrange(0,write_num):
 		dut.rd_data = j<<24 | j<<16 | j<<8 | j
 		dut.rd_addr = j%32
 		data[j%32]  = j<<24 | j<<16 | j<<8 | j
@@ -95,4 +96,19 @@ def test_pc_regs(dut):
 
 	dut._log.info("Finsihed test!")
 	raise TestSuccess()
-	raise TestSuccess()
+
+
+def random_write_counts(min_size=1, max_size=0xFF, tests=10):
+    """random string data of a random length"""
+    for i in range(tests):
+		yield random.randint(min_size, max_size)
+
+
+
+
+factory = TestFactory(run_test)
+factory.add_option("write_num", random_write_counts())
+factory.add_option("test_setting", ["High","Low","Z"])
+factory.generate_tests()
+
+
