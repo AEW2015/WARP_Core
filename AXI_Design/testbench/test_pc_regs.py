@@ -42,9 +42,11 @@ def run_test(dut,write_num=None,test_setting=None):
 
 	dut._log.info("Write test 1")
 	for j in xrange(0,write_num):
-		dut.rd_data = j<<24 | j<<16 | j<<8 | j
-		dut.rd_addr = j%32
-		data[j%32]  = j<<24 | j<<16 | j<<8 | j
+		data_to_write = random.randint(0,0xFFFFFFFF)
+		addr_to_write = random.randint(0,31)
+		dut.rd_data = data_to_write
+		dut.rd_addr = addr_to_write
+		data[addr_to_write]  = data_to_write
 		data[0] = 0
 		dut.we = 1
 		yield RisingEdge(dut.clk)
@@ -77,9 +79,11 @@ def run_test(dut,write_num=None,test_setting=None):
 
 	dut._log.info("Write test 2")
 	for j in xrange(0,write_num):
-		dut.rd_data = j<<24 | j<<16 | j<<8 | j
-		dut.rd_addr = j%32
-		data[j%32]  = j<<24 | j<<16 | j<<8 | j
+		data_to_write = random.randint(0,0xFFFFFFFF)
+		addr_to_write = random.randint(0,31)
+		dut.rd_data = data_to_write
+		dut.rd_addr = addr_to_write
+		data[addr_to_write]  = data_to_write
 		data[0] = 0
 		dut.we = 1
 		yield RisingEdge(dut.clk)
