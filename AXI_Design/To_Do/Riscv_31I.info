@@ -1,0 +1,5 @@
+riscv32-unknown-elf-gcc -c test.c  -march=rv32i
+riscv32-unknown-elf-objdump -d test.o > test.dump
+riscv32-unknown-elf-gcc -c start.s  -march=rv32i 
+riscv32-unknown-elf-objdump -d start.o > start.dump
+riscv32-unknown-elf-gcc -o test.elf  start.o test.o -march=rv32i -nostdlib
