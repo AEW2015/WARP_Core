@@ -18,7 +18,6 @@ def run_test(dut,write_num=None,test_setting=None):
 	
 	
 	cocotb.fork(Clock(dut.clk, 2).start())
-	dut._log.info("Running test!")
 	dut.rst = 1
 	dut.rs1_addr = 0
 	dut.rs2_addr = 0
@@ -99,7 +98,6 @@ def run_test(dut,write_num=None,test_setting=None):
 				raise TestFailure ("rs2 [%d] expected: 0x%08x acutal:0x%08x" %(reg2,data[reg2],dut.rs2_data))
 
 
-	dut._log.info("Finsihed test!")
 	raise TestSuccess()
 
 
