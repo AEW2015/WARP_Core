@@ -1,0 +1,20 @@
+/*
+===============================================================================================================================
+Put your custom CSS in this file.
+===============================================================================================================================
+*/
+
+/* CSS to hide sidebar numbering (uncomment to enable) */
+/*
+#sidebar ul.topics > li > a b
+{
+    visibility: hidden;
+}
+*/
+
+/* CSS to hide clipboard icon (uncomment to enable) */
+/*
+.copy-to-clipboard {
+    display:none;
+}
+*/
