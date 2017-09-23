@@ -1,0 +1,105 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.gise
+*.xise
+*.xmsgs
+*.xreport
+*.bld
+*.cmd_log
+*.lso
+*.ncd
+*.ngc
+*.ngd
+*.ngr
+*.pad
+*.par
+*.pcf
+*.prj
+*.ptwx
+*.stx
+*.syr
+*.twr
+*.twx
+*.unroutes
+*.ut
+*.xpi
+*.xst
+*.html
+*.map
+*.mrp
+*.ngm
+*.xrpt
+*.csv
+*.xml
+*.lst
+*.bgn
+*.drc
+*.xbcd
+*.ref
+*.vho
+*.vdbl
+*.vdbx
+*.xwbt
+*.bit
+*.log
+*.bin
+*.html
+*.exe
+*.wdb
+*.projectmgr
+*.dbg
+*.dll
+*.dat
+*.c
+*.didat
+*.obj
+*.vdb
+*.ini
+Projects/GPIO_test/isim/button_debounce_isim_beh.exe.sim/tmp_save/_1
+Projects/GPIO_test/isim/pn_info
+Projects/Uart/isim/Transmitter_Core_isim_beh.exe.sim/tmp_save/_1
+Projects/Uart/isim/pn_info
+*.sdbl
+*.sdbx
+Projects/uart_demo/
