@@ -9,8 +9,11 @@ child_type: docs
 
 # Introduction
 
-##What: WARP Core
+###What: 
+WARP Core
 
-##Why: Education => Space Processor
+###Why: 
+Education => Space Processor
 
-##Who: Andrew E Wilson
+###Who: 
+Andrew E Wilson
