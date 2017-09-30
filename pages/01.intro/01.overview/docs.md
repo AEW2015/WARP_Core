@@ -15,6 +15,6 @@ The main purpose for this project is for me to apply what I learn in my various 
 
 ### Who
 
-This project by Andrew E Wilson, a graduate student at Brigham Young University and a Pathways Intern at NASA GSFC.
+This project is by Andrew E Wilson, a graduate student at Brigham Young University and a Pathways Intern at NASA GSFC.
 
 This project is for students, hobbyist, potential employers, and the curious individual.

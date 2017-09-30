@@ -9,5 +9,5 @@ child_type: docs
 
 # Introduction
 
-A VHDL and Verilog Processor designed for academic purposes and future potential as a soft core processor build for space
+A VHDL and Verilog Processor designed for academic purposes and future potential as a soft-core processor build for space
 

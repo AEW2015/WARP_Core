@@ -1,7 +1,7 @@
 # WARP_Core
 Wilson AXI RISCV Processor Core
 
-- [Website Documentation]( http://wilsoninspace.com/warp-core/) Shows all the steps I went through in designing and testing this project.
+- [Website Documentation]( http://wilsoninspace.com/warp-core/) shows all the steps I went through in designing and testing this project.
 
 ## News
 
