@@ -9,4 +9,5 @@ child_type: docs
 
 # Introduction
 
-Single Sentence
+A VHDL and Verilog Processor designed for academic purposes and future potential as a soft core processor build for space
+
