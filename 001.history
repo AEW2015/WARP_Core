@@ -1,0 +1,930 @@
+    1  sudo apt-get install ghex
+    2  cd RISCV/
+    3  ls
+    4  ghex test.o
+    5  git submodule update --init --recursive
+    6  sudo apt install git
+    7  git submodule update --init --recursive
+    8  ls
+    9  mkdir RISCV
+   10  cd RISCV/
+   11  export TOP=$(pwd)
+   12  TOP
+   13  echo TOP
+   14  echo $TOP
+   15  cd ~
+   16  ls
+   17  cd RISCV
+   18  pwd
+   19  V$ git submodule update --init --recursive
+   20  git clone https://github.com/riscv/riscv-tools.git
+   21  cd $TOP/riscv-tools
+   22  git submodule update --init --recursive
+   23  sudo apt-get install autoconf automake autotools-dev curl device-tree-compiler libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc
+   24  export RISCV=$TOP/riscv
+   25  export PATH=$PATH:$RISCV/bin
+   26  ./build.sh
+   27  cd $TOP
+   28  echo -e '#include <stdio.h>\n int main(void) { printf("Hello world!\\n"); return 0; }' > hello.c
+   29  riscv64-unknown-elf-gcc -o hello hello.c
+   30  cd riscv-tools/
+   31  ./build.sh
+   32  ./build.sh --force
+   33  sudo apt-get install libtool
+   34  sudo apt-get install libusb-devel
+   35  sudo apt-get install libusb-1.0-0-dev
+   36  ./build.sh --force
+   37  sudo apt-get install gcc
+   38  sudo apt-get install c++
+   39  sudo apt-get install libz-dev
+   40  sudo apt-get install gcc-4.8
+   41  sudo apt-get install g++-4.8
+   42  ./build.sh CC=gcc-4.8 CXX=g++-4.8
+   43  cd ..
+   44  riscv64-unknown-elf-gcc -o hello hello.c
+   45  spike pk hello
+   46  riscv32-unknown-elf-gcc -o hello hello.c
+   47  cd riscv
+   48  ls
+   49  cd ..
+   50  ls
+   51  cd riscv
+   52  cd //
+   53  cd ~
+   54  ls
+   55  cd ./RISCV
+   56  cd riscv-tools/
+   57  ls
+   58  cd riscv-gnu-toolchain/
+   59  ls
+   60  ./configure --prefix=/opt/riscv --with-arch=rv32
+   61  ./configure --prefix=/opt/riscv --with-arch=rv32i
+   62  make linux
+   63  riscv32-unknown-elf-gcc 
+   64  riscv32-unknown-elf-gcc
+   65  cd ../..
+   66  riscv64-unknown-elf-gcc
+   67  riscv64-unknown-elf-gcc --help
+   68  riscv64-unknown-elf-gcc -o hello hello.c
+   69  spike pk hello
+   70  riscv64-unknown-elf-gcc -o hello hello.c -march=RV32I
+   71  riscv64-unknown-elf-gcc -o hello hello.c -march=rv32i
+   72  riscv32-unknown-elf-gcc -o hello hello.c -march=rv32i
+   73  cd ./riscv-tools/
+   74  ./configure --prefix=/opt/riscv --with-arch=rv32i
+   75  ls
+   76  echo $RISCV
+   77  ls
+   78  ./build-rv32i.sh 
+   79  cd ..
+   80  riscv32-unknown-elf-gcc -o hello hello.c
+   81  riscv32-unknown-elf-gcc -o hello hello.c -m32
+   82  riscv32-unknown-elf-gcc -o hello hello.c -march-rv32i
+   83  riscv32-unknown-elf-gcc -o hello hello.c -march=rv32i
+   84  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i
+   85  riscv32-unknown-elf-objdump -d test.c > test.dump
+   86  riscv32-unknown-elf-objdump -d test.o > test.dump
+   87  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -T
+   88  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles
+   89  riscv32-unknown-elf-objdump -d test.o > test.dump
+   90  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O2 -G 0
+   91  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O2
+   92  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -S
+   93  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -S test.s
+   94  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -s test.s
+   95  riscv32-unknown-elf-gcc -o test.o -S test.c -march=rv32i 
+   96  riscv32-unknown-elf-gcc  -S test.c 
+   97  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -OS
+   98  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -Os
+   99  riscv32-unknown-elf-objdump -d test.o > test.dump
+  100  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -Os
+  101  riscv32-unknown-elf-objdump -d test.o > test.dump
+  102  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O1
+  103  riscv32-unknown-elf-objdump -d test.o > test.dump
+  104  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O1
+  105  riscv32-unknown-elf-objdump -d test.o > test.dump
+  106  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -Os
+  107  riscv32-unknown-elf-objdump -d test.o > test.dump
+  108  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O3
+  109  riscv32-unknown-elf-objdump -d test.o > test.dump
+  110  riscv64-unknown-elf-gcc -o test.o test.c
+  111  riscv32-unknown-elf-objdump -d test.o > test.dump
+  112  riscv64-unknown-elf-gcc -S test.o test.c
+  113  riscv64-unknown-elf-gcc -S test.c
+  114  riscv32-unknown-elf-gcc -S test.c
+  115  gcc -S test.c
+  116  riscv32-unknown-elf-gcc -S test.c
+  117  gcc -S test.c
+  118  $gcc
+  119  echo $gcc
+  120  gcc -S test.c
+  121  gcc -S test.c -O3
+  122  gcc -S test.c -01
+  123  gcc -S test.c -O3
+  124  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles -O3
+  125  riscv32-unknown-elf-objdump -d test.o > test.dump
+  126  riscv32-unknown-elf-objdump -help
+  127  riscv32-unknown-elf-objdump --help
+  128  riscv32-unknown-elf-objcopy --help
+  129  riscv32-unknown-elf-objcopy -O binary test.o test.bin
+  130  sudo apt-get install git make gcc g++ swig python-dev
+  131  sudo rm /var/lib/apt/lists/lock
+  132  sudo apt-get install git make gcc g++ swig python-dev
+  133  sudo rm /var/cache/apt/archives/lock
+  134  sudo apt-get install git make gcc g++ swig python-dev
+  135  sudo apt-get install git
+  136  sudo apt-get update
+  137  ps -aux | grep 'apt-get'
+  138  top
+  139  ps -aux | grep 'apt-get'
+  140  sudo kill -9 21292
+  141  sudo apt-get install git make gcc g++ swig python-dev
+  142  mkdir cocotb
+  143  cd cocotb/
+  144  git clone https://github.com/potentialventures/cocotb
+  145  cd cocotb/examples/endian_swapper/tests
+  146  make
+  147  sudo apt-get install bison
+  148  sudo apt-get install flex
+  149  sudo apt-get install gperf 2.7
+  150  cd ~
+  151  mkdir iverilog
+  152  git clone git://github.com/steveicarus/iverilog.git
+  153  cd iverilog/
+  154  sh autoconf.sh
+  155  ./configure 
+  156  make
+  157  su
+  158  sudo su
+  159  cd ~
+  160  cd cocotb/
+  161  cd cocotb/examples/endian_swapper/tests/
+  162  make
+  163  iverilog
+  164  cd ..
+  165  ls
+  166  cd hdl
+  167  ls
+  168  iverilog
+  169  iverilog endian_swapper.vhdl 
+  170  iverilog endian_swapper.sv
+  171  ls
+  172  cd ivl_vhdl_work/
+  173  ls
+  174  cd ..
+  175  ./a.out 
+  176  ls
+  177  rm a.out 
+  178  rm ivl_vhdl_work/
+  179  cd ivl_vhdl_work/
+  180  ls
+  181  cd ..
+  182  rn -r ./ivl_vhdl_work/
+  183  rm -r ./ivl_vhdl_work/
+  184  ls
+  185  cd ..
+  186  cd tests/
+  187  make
+  188  gedit make
+  189  ls
+  190  gedit Makefile 
+  191  make
+  192  cd ..
+  193  cd hdl
+  194  iverilog -tvlog95 -o test.v ./endian_swapper.vhdl 
+  195  ls
+  196  cd ivl_vhdl_work/
+  197  ls
+  198  cd ..
+  199  rm -r ./ivl_vhdl_work/
+  200  cd ../tests/
+  201  ls
+  202  gtkwave waveform.vcd 
+  203  ls
+  204  gedit Makefile 
+  205  make
+  206  gedit test_endian_swapper.py &
+  207  cd ~
+  208  cd cocotb/
+  209  mkdir sandbox
+  210  cd sandbox/
+  211  gedit Makefile
+  212  cd ../cocotb/examples/endian_swapper/hdl/
+  213  ls
+  214  gedit endian_swapper.sv 
+  215  cd ../../..
+  216  cd ../sandbox/
+  217  gedit Makefile &
+  218  make
+  219  ls
+  220  make
+  221  ls
+  222  cd ../cocotb/examples/endian_swapper/tests/
+  223  make
+  224  ls
+  225  cd ../../..
+  226  cd ../sandbox/
+  227  make
+  228  ls
+  229  make
+  230  ls
+  231  make
+  232  ls
+  233  make
+  234  amke
+  235  make
+  236  sudo adduser zealot vboxsf
+  237  cd ~
+  238  ls
+  239  cd ../
+  240  ls
+  241  cd ..
+  242  ls
+  243  cd ~
+  244  ls
+  245  mkdir GTKWave
+  246  ls
+  247  cd GTKWave/
+  248  ls
+  249  tar xvzf gtkwave-3.3.83.tar.gz 
+  250  ls
+  251  cd gtkwave-3.3.83/
+  252  ls
+  253  ./configure 
+  254  make
+  255  su
+  256  make
+  257  ls
+  258  sudo su
+  259  make
+  260  gedit Makefile.in 
+  261  make
+  262  cd ~
+  263  sudo apt-get install gtkwave
+  264  gtkwave
+  265  sudo apt-get install gpart
+  266  sudo apt-get install foremost
+  267  foremost
+  268  jobs
+  269  kill %1
+  270  sudo testdisk
+  271  sudo apt-get install testdisk
+  272  sudo testdisk
+  273  cd ~/cocotb/sandbox/
+  274  make
+  275  ls
+  276  gedit test_my_design.py &
+  277  make
+  278  ls
+  279  gtkwave waveform.vcd 
+  280  cd ../cocotb/examples/endian_swapper/tests/
+  281  make
+  282  ls
+  283  make >> log.txt
+  284  cd ~/RISCV/
+  285  riscv32-unkown-elf-gcc
+  286  echo $path
+  287  echo $PATH
+  288  ls
+  289  export RISCV=$TOP/riscv
+  290  export PATH=$PATH:$RISCV/bin
+  291  riscv32-unknown-elf-gcc -o test.o test.c -marc-rv32i -ffreestanding
+  292  riscv32-unknown-elf-gcc -o test.o test.c -marc=rv32i -ffreestanding
+  293  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -ffreestanding
+  294  riscv32-unknown-elf-objdump test.t -o test.dump
+  295  riscv32-unknown-elf-objdump -d test.t -o test.dump
+  296  riscv32-unknown-elf-objdump test.t -d test.dump
+  297  riscv32-unknown-elf-objdump test.o -d
+  298  riscv32-unknown-elf-objdump -d test.o > test.dump
+  299  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib
+  300  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nosstartfile
+  301  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nosstartfiles
+  302  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostdlib -nostartfiles
+  303  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostartfiles
+  304  riscv32-unknown-elf-objdump -d test.o > test.dump
+  305  make
+  306  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostartfiles
+  307  riscv32-unknown-elf-objdump -d test.o > test.dump
+  308  riscv32-unknown-elf-gcc -o test.o test.c -march=rv32i -nostartfiles -Wl,-eentry
+  309  riscv32-unknown-elf-objdump -d test.o > test.dump
+  310  riscv32-unknown-elf-gcc -o test.o test.c -c start.s  -march=rv32i -nostartfiles -Wl,-eentry
+  311  riscv32-unknown-elf-gcc -o test.o  -c start.s  -march=rv32i -nostartfiles -Wl,-eentry
+  312  riscv32-unknown-elf-objdump -d test.o > test.dump
+  313  riscv32-unknown-elf-gcc -o test.o  -c start.s  test.c -march=rv32i -nostartfiles -Wl,-eentry
+  314  riscv32-unknown-elf-gcc -o test.o  start.s  test.c -march=rv32i -nostartfiles -Wl,-eentry
+  315  riscv32-unknown-elf-gcc -o test.o  start.s  test.c -march=rv32i -nostartfiles
+  316  riscv32-unknown-elf-gcc -o test.o  -c start.s  test.c -march=rv32i -nostartfiles
+  317  riscv32-unknown-elf-gcc -o test.o  start.s  test.c -march=rv32i -nostartfiles
+  318  riscv32-unknown-elf-gcc -c start.s
+  319  riscv32-unknown-elf-gcc -o test.o  start.o  -march=rv32i -nostartfiles
+  320  riscv32-unknown-elf-gcc -o test.o  start.o  -march=rv32i
+  321  riscv32-unknown-elf-gcc -o test.o  start.o  -march=rv32i -nostdlib
+  322  riscv32-unknown-elf-gcc -o test.o  test.c  -march=rv32i -nostdlib
+  323  riscv32-unknown-elf-objdump -d test.o > test.dump
+  324  riscv32-unknown-elf-gcc -o test.o start.s  -march=rv32i -nostdlib
+  325  riscv32-unknown-elf-gcc -o test.o start.s  -march=rv32i -nostdlib -nostartfiles
+  326  riscv32-unknown-elf-gcc -c start.s
+  327  ls
+  328  riscv32-unknown-elf-objdump -d start.o > start.dump
+  329  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i -nostdlib -nostartfiles
+  330  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i 
+  331  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i -nostdlib 
+  332  riscv32-unknown-elf-gcc -c test.c
+  333  riscv32-unknown-elf-objdump -d test.o > test.dump
+  334  riscv32-unknown-elf-gcc -o test.elf test.o  -march=rv32i -nostdlib 
+  335  riscv32-unknown-elf-objdump -d test.elf > test.dump
+  336  riscv32-unknown-elf-gcc -c test.c
+  337  riscv32-unknown-elf-objdump -d test.o > test.dump
+  338  riscv32-unknown-elf-gcc -o test.elf start.o  -march=rv32i -nostdlib 
+  339  riscv32-unknown-elf-gcc -c start.s
+  340  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i -nostdlib -Wl,-emain 
+  341  riscv32-unknown-elf-gcc -c start.s
+  342  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i -nostdlib -nostartfiles
+  343  riscv32-unknown-elf-gcc -c start.s
+  344  riscv32-unknown-elf-gcc -o test.o start.o  -march=rv32i -nostdlib -nostartfiles
+  345  riscv32-unknown-elf-gcc -o test.o test.c  -march=rv32i 
+  346  riscv32-unknown-elf-objdump -d test.o > test.dump
+  347  riscv32-unknown-elf-gcc -o test.o -S test.c  -march=rv32i 
+  348  riscv32-unknown-elf-gcc -S test.c  -march=rv32i 
+  349  ls
+  350  riscv32-unknown-elf-gcc -S test.c  -march=rv32i 
+  351  riscv32-unknown-elf-gcc -c test.c  -march=rv32i 
+  352  riscv32-unknown-elf-objdump -d test.o > test.dump
+  353  riscv32-unknown-elf-gcc -o test.elf test.o  -march=rv32i -nostdlib -Wl,-emain 
+  354  riscv32-unknown-elf-objdump -d test.elf > testelf.dump
+  355  riscv32-unknown-elf-gcc -c start.s  -march=rv32i 
+  356  riscv32-unknown-elf-objdump -d start.o > start.dump
+  357  riscv32-unknown-elf-gcc -o test.elf test.o  start.o -march=rv32i -nostdlib  
+  358  riscv32-unknown-elf-objdump -d test.elf > testelf.dump
+  359  riscv32-unknown-elf-objdump -d test.elf > testelf.dump
+  360  cd ~/cocotb/sandbox/
+  361  gtkwave waveform.vcd 
+  362  gedit figure3.json 
+  363  make
+  364  iverilog help
+  365  help iverilog
+  366  man -l iverilog
+  367  info iverilog
+  368  make
+  369  GTKWAVE
+  370  gtkwave waveform.vcd 
+  371  make
+  372  gtkwave waveform.vcd 
+  373  cd ..
+  374  ls
+  375  git https://github.com/AEW2015/WARP_Core.git WARP_Core
+  376  git clone  https://github.com/AEW2015/WARP_Core.git WARP_Core
+  377  ls
+  378  cd WARP_Core/
+  379  ls
+  380  mkdir AXI_Design
+  381  cd AXI_Design/
+  382  gedit readme.md
+  383  git add readme.md 
+  384  mkdir src
+  385  mkdir testbench
+  386  cd src/
+  387  gedit readme.md
+  388  git add readme.md 
+  389  cd ..
+  390  cd testbench/
+  391  gedit readme.md
+  392  git add readme.md 
+  393  git commit -m "Adding AXI-bux directory for new project direction"
+  394  git config --global user.email "lavatech.co@gmail.com"
+  395  git config --global user.name "AEW2015"
+  396  git commit -m "Adding AXI-bux directory for new project direction"
+  397  git push
+  398  cd ../src
+  399  ls
+  400  git config --global user.name "Andrew E Wilson"
+  401  cd ~/cocotb/sandbox/
+  402  make
+  403  cd ~/WARP_Core/AXI_Design/src/
+  404  ls
+  405  git pull
+  406  ls
+  407  cd ..
+  408  cd testbench/
+  409  ls
+  410  gedit Makefile
+  411  gedit test_pc_regs.py
+  412  make
+  413  gtkwave pc_waveform.vcd 
+  414  make
+  415  gtkwave pc_waveform.vcd 
+  416  make
+  417  gtkwave pc_waveform.vcd 
+  418  make
+  419  gtkwave pc_waveform.vcd 
+  420  amke
+  421  make
+  422  gtkwave pc_waveform.vcd 
+  423  make
+  424  gtkwave pc_waveform.vcd 
+  425  make
+  426  gtkwave pc_waveform.vcd 
+  427  make
+  428  ls
+  429  make
+  430  git add test_pc_regs.py
+  431  git add Makefile 
+  432  git commit -m "First cocotb testbench
+  433  "
+  434  git push
+  435  make
+  436  mak3e
+  437  make
+  438  kill %1
+  439  make
+  440  kill %1
+  441  make
+  442  git commit -m "updated 2 source regs and 1 destination"
+  443  git push
+  444  make
+  445  git commit
+  446  git commit -m
+  447  git commit -m "updated"
+  448  git commit -am
+  449  git commit -am "updated"
+  450  git push
+  451  make
+  452  cd ~/cocotb/cocotb/examples/endian_swapper/tests/
+  453  make
+  454  cd ~/WARP_Core/
+  455  cd AXI_Design/
+  456  cd testbench/
+  457  make
+  458  ls
+  459  cd WARP_Core/
+  460  ls
+  461  cd AXI_Design/
+  462  ls
+  463  cd testbench/
+  464  vim test_pc_regs.py
+  465  cd ~/WARP_Core/AXI_Design/testbench/
+  466  make
+  467  git commit -am "runs 30 test"
+  468  git push
+  469  cd ~/cocotb/cocotb/examples/endian_swapper/tests/
+  470  make
+  471  cd ~/WARP_Core/AXI_Design/testbench/
+  472  make
+  473  cd ~/cocotb/
+  474  cd sandbox/
+  475  ls
+  476  mkdir ghdl_test
+  477  cd ghdl_test/
+  478  ls
+  479  gedit test.vhd
+  480  gedit Makefile
+  481  gedit test_my_design.py
+  482  make
+  483  ghdl -a test
+  484  ghdl -a test.vhd 
+  485  make
+  486  ls
+  487  cd sim_build/
+  488  ls
+  489  cd ..
+  490  ls
+  491  make --fst=test.fst
+  492  ghdl --fst
+  493  ghdl --help
+  494  ghdl --vcd=test
+  495  ghdl -r test.vhd --vcd=adder.vcd
+  496  ghdl -a adder.vhd
+  497  ghdl -a test.vhd 
+  498  ghdl -e arrder
+  499  ghdl -e adder
+  500  ghdl -r adder --vcd=adder.vcd
+  501  ls
+  502  gtkwave adder.vcd 
+  503  make --vcd=adder.vcd
+  504  make
+  505  ls
+  506  gtkwave adder.vcd 
+  507  make
+  508  ls
+  509  make
+  510  ls
+  511  cd sim_build/
+  512  ls
+  513  gtkwave wave.vcd 
+  514  make
+  515  cd ..
+  516  make
+  517  ls
+  518  gtkwave wave.vcd 
+  519  cd ~/WARP_Core/AXI_Design/
+  520  cd testbench/
+  521  make
+  522  ls
+  523  gtkwave pc_waveform.vcd 
+  524  make
+  525  gtkwave pc_waveform.vcd 
+  526  make
+  527  ghdl --help
+  528  cd ~/cocotb/sandbox/ghdl_test/
+  529  ghdl -r adder --vcd=adder.vcd -timesclae
+  530  ghdl -r adder --vcd=adder.vcd -timescale
+  531  ghdl -r adder --vcd=adder.vcd --help
+  532  gedit Makefile 
+  533  make
+  534  ls
+  535  gtkwave wave.fst 
+  536  gtkwave wave.vcd
+  537  make
+  538  ls
+  539  gtkwave wave.ghw 
+  540  cd ~/WARP_Core/AXI_Design/
+  541  ls
+  542  cd src/
+  543  mkdir verilog
+  544  mkdir vhdl
+  545  mv pc_regs.sv ./verilog/
+  546  ls
+  547  cd verilog/
+  548  ls
+  549  cd ../../testbench/
+  550  make
+  551  cd ../src/vhdl
+  552  gedit pc_regs.vhd
+  553  ghdl -a pc_regs.vhd 
+  554  make
+  555  ghdl -a pc_regs.vhd 
+  556  cd ../../testbench/
+  557  ls
+  558  make
+  559  make MODE = vhdl
+  560  make $MODE = vhdl
+  561  make
+  562  gtkwave wave.fst 
+  563  amke
+  564  make
+  565  gtkwave wave.fst 
+  566  make
+  567  make MODE=v
+  568  make MODE=verilog
+  569  make MODE=vhdl
+  570  git commit -am "added VHDL"
+  571  git push
+  572  git pull
+  573  git push
+  574  make MODE=verilog
+  575  make MODE=vhdl
+  576  cd ../src/
+  577  git -add ./verilog/pc_regs.sv
+  578  git add ./verilog/pc_regs.sv
+  579  git add ./vhdl/pc_regs.vhd 
+  580  git commit -am "src files"
+  581  git push
+  582  cd ../testbench/
+  583  make
+  584  make MODE+verilog
+  585  make MODE=verilog
+  586  make
+  587  make MODE=verilog
+  588  git commit -am "random tests"
+  589  git push
+  590  make MODE=verilog
+  591  make
+  592  make GUI=1
+  593  make MODE=verilog GUI=1
+  594  make
+  595  make MODE=verilog
+  596  cd ~
+  597  ls
+  598  mkdir Class
+  599  ls
+  600  cd Class/
+  601  mkdir 620
+  602  cd 620/1
+  603  cd 620/
+  604  ls
+  605  mkdir Homework_1
+  606  ls
+  607  cd Homework_1/
+  608  mkdir src
+  609  cd src
+  610  ls
+  611  gedit alu.sv
+  612  iverilog alu.sv 
+  613  cd ..
+  614  mkdir test
+  615  cd test/
+  616  gedit test.py
+  617  gedit Makefile
+  618  make
+  619  ls
+  620  make
+  621  gtkwave alu_waveform.vcd 
+  622  make
+  623  gtkwave alu_waveform.vcd 
+  624  make
+  625  gtkwave alu_waveform.vcd 
+  626  make
+  627  gtkwave alu_waveform.vcd 
+  628  make
+  629  gtkwave alu_waveform.vcd 
+  630  make
+  631  gtkwave alu_waveform.vcd 
+  632  amek
+  633  make
+  634  cd ~/cocotb/cocotb/examples/endian_swapper/tests/
+  635  make
+  636  cd ~/Class/620/Homework_1/test/
+  637  make
+  638  gtkwave alu_waveform.vcd 
+  639  make
+  640  gtkwave alu_waveform.vcd 
+  641  make
+  642  cd ~/WARP_Core/cocotb_examples/alu/
+  643  git add ./src/
+  644  git add -r ./src/
+  645  git add ./src/alu.sv 
+  646  git add ./test/Makefile 
+  647  git add ./test/test.py
+  648  git commit -am "alu example"
+  649  git rm ./src/a.out 
+  650  git commit -am "alu example"
+  651  git push
+  652  cd ~/Class/620/Homework_1/test/
+  653  make
+  654  gtkwave alu_waveform.vcd 
+  655  make
+  656  sudo apt-get install ghdl
+  657  sudo apt-get update
+  658  sudo apt-get install ghdl gtkwave
+  659  git clone https://github.com/tgingold/ghdl ./ghdl
+  660  cd ghdl/
+  661  ls
+  662  sudo apt-get install gnatmake
+  663  sudo apt-get install gnat
+  664  6gpl2014-9) ...
+  665  make install
+  666  sudo make install
+  667  sudo apt-get install zlib1g-dev
+  668  sudo make install
+  669  su
+  670  sudo su
+  671  sudo make
+  672  sudo make install
+  673  ghdl
+  674  ls
+  675  cd RISCV/
+  676  ls
+  677  cd riscv
+  678  ls
+  679  cd ..
+  680  cd riscv-tools/
+  681  ls
+  682  less README.md 
+  683  ls
+  684  cd ~
+  685  ls
+  686  cd RISCV/
+  687  ls
+  688  mkdir Sandbox
+  689  cd Sandbox/
+  690  ls
+  691  riscv32-unknown-elf-gcc
+  692  gedit multi.c &
+  693  riscv32-unknown-elf-gcc -s multi.c 
+  694  export PATH=$PATH:$RISCV/bin
+  695  riscv32-unknown-elf-gcc -s multi.c 
+  696  export RISCV=$TOP/riscv
+  697  export PATH=$PATH:$RISCV/bin
+  698  riscv32-unknown-elf-gcc -s multi.c 
+  699  cd ..
+  700  riscv32-unknown-elf-gcc -s multi.c 
+  701  echo $top
+  702  echo $TOP
+  703  echo $PATH
+  704  ls
+  705  pwd
+  706  cd riscv
+  707  ls
+  708  cd bin
+  709  pwd
+  710  export PATH=$PATH:/home/zealot/RISCV/riscv/bin
+  711  riscv32-unknown-elf-gcc -s multi.c 
+  712  cd ../../Sandbox/
+  713  riscv32-unknown-elf-gcc -s multi.c 
+  714  ls
+  715  riscv32-unknown-elf-objdump -d a.out > test.dump
+  716  gedit test.dump 
+  717  riscv32-unknown-elf-gcc -o test.elf test.o  -march=rv32i -nostdlib 
+  718  history 
+  719  history | grep riscv
+  720  history | grep riscv > log.txt
+  721  gedit log.txt 
+  722  history | grep build
+  723  history > log.txt 
+  724  spike
+  725  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -T
+  726  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles
+  727  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib
+  728  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i  -nostartfiles
+  729  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i 
+  730  ls
+  731  riscv32-unknown-elf-objdump -d test.o
+  732  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib
+  733  ls
+  734  rm test.o
+  735  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib
+  736  ls
+  737  riscv32-unknown-elf-objdump -d test.o
+  738  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles
+  739  riscv32-unknown-elf-objdump -d test.o 
+  740  riscv32-unknown-elf-gcc -o test.o multi.c -march=r
+  741  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O3
+  742  riscv32-unknown-elf-objdump -d test.o 
+  743  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O2
+  744  riscv32-unknown-elf-objdump -d test.o 
+  745  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O1
+  746  riscv32-unknown-elf-objdump -d test.o 
+  747  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O0
+  748  riscv32-unknown-elf-objdump -d test.o 
+  749  riscv32-unknown-elf-objdum -h
+  750  riscv32-unknown-elf-objdump -h
+  751  riscv32-unknown-elf-objdump -help
+  752  riscv32-unknown-elf-objdump -x test.o
+  753  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i
+  754  riscv32-unknown-elf-objdump -x test.o
+  755  history
+  756  pwd
+  757  history
+  758  gedit ~/.bash_Rc
+  759  gedit ~/.bash_rc
+  760  gedit ~/.bashrc
+  761  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O0
+  762  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O3
+  763  riscv32-unknown-elf-objdump -x test.o
+  764  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib -nostartfiles -O3
+  765  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i 
+  766  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib
+  767  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostartfiles -O3
+  768  riscv32-unknown-elf-objdump -x test.o
+  769  riscv32-unknown-elf-objdump -d test.o
+  770  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostdlib
+  771  riscv32-unknown-elf-gcc -o test.o multi.c -march=rv32i -nostartfiles -O3
+  772  riscv32-unknown-elf-objdump -d test.o 
+  773  history
+  774  sudo apt-get install ghdl
+  775  cd WARP_Core/
+  776  git push -f origin HEAD^:master
+  777  git status
+  778  ls
+  779  git push -f origin HEAD^:master
+  780  git status
+  781  ls
+  782  cd cocotb_examples/
+  783  ls
+  784  cd alu/
+  785  ls
+  786  cd src/
+  787  ls
+  788  cd ..
+  789  ls
+  790  cd ..
+  791  ls
+  792  cd ..
+  793  ls
+  794  cd AXI_Design/
+  795  ls
+  796  cd src/
+  797  ls
+  798  cd ..
+  799  ls
+  800  cd ..
+  801  git status
+  802  git commit -am "test"
+  803  git push
+  804  git pull
+  805  git push -f origin HEAD^:master
+  806  status
+  807  git status
+  808  git push
+  809  git pull
+  810  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  811  git push
+  812  git pull
+  813  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  814  git pull
+  815  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  816  git push --force
+  817  git pull
+  818  git revert 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  819  git revert 7343f7eba414e24c5d9f3ae66058d75a0282b9d4
+  820  git push
+  821  git rebase -i HEAD~2
+  822  kill %1
+  823  git rebase -i HEAD~2
+  824  git rebase --abort
+  825  git pull
+  826  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  827  git push --force
+  828  git pull
+  829  ls
+  830  cd pages/
+  831  ls
+  832  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  833  git push --force
+  834  ls
+  835  git push --force
+  836  ls
+  837  git status
+  838  git pull
+  839  git push -f origin HEAD^:master
+  840  git update
+  841  git pull
+  842  git rebase -i HEAD~2
+  843  git push origin +branchName
+  844  git push origin
+  845  git push origin --force
+  846  git push origin +master
+  847  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  848  git push origin +master
+  849  git pull
+  850  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  851  git push origin +master
+  852  git reset --hard 4a4282dfa26e1f9d480a31e6a26254c159093ade
+  853  git push origin -f
+  854  ls
+  855  git push origin -f
+  856  git push origin HEAD --force
+  857  cd ../..
+  858  mkdir WILSON
+  859  cd WILSON/
+  860  echo "# WILSON" >> README.md
+  861  git init
+  862  git add README.md
+  863  git commit -m "first commit"
+  864  git remote add origin https://github.com/AEW2015/WILSON.git
+  865  git push -u origin master
+  866  git checkout 4a4282d
+  867  cd ../WARP_Core/
+  868  git checkout 4a4282d
+  869  git checkout -b repair 
+  870  git checkout master
+  871  git reset --hard 4a4282d
+  872  git merge repair
+  873  git push --hard origin master
+  874  git push --force origin master
+  875  git status
+  876  git checkout master
+  877  git reset --hard 4a4282d
+  878  git push --force origin master
+  879  git diff master..origin/master
+  880  git push --force origin master
+  881  git push --force origin 4a4282d:master
+  882  git push --force
+  883  git push
+  884  git commit -m "clear"
+  885  git reset --hard 4a4282d
+  886  git reset HEAD~ 
+  887  ls
+  888  cd pages/
+  889  ls
+  890  git add ...
+  891  cd 01.intro/
+  892  git -r ./*
+  893  git  ./*
+  894  git  status
+  895  git add 01.overview/
+  896  git commit -am "rebase"
+  897  cd 01.overview/
+  898  ls
+  899  git push
+  900  git push -force
+  901  git push -f
+  902  cd 01
+  903  ls
+  904  git status
+  905  git reset HEAD~ 
+  906  git status
+  907  cd ..
+  908  cd pages/
+  909  git add ./*
+  910  git status
+  911  git commit -am "rebase"
+  912  git push -f
+  913  git pull
+  914  git push
+  915  git pull
+  916  cd ..
+  917  ls
+  918  cd AXI_Design/
+  919  ls
+  920  cd testbench/
+  921  ls
+  922  cd ..
+  923  git status
+  924  ghex
+  925  v$
+  926  V$
+  927  history
+  928  history | grep "ghdl"
+  929  cd ./WARP_Core/
+  930  history > history.log
