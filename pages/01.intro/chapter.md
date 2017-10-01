@@ -4,6 +4,9 @@ taxonomy:
     category:
         - docs
 child_type: docs
+highlight:
+    enabled: false
+---
 ---
 
 ### Chapter 0
