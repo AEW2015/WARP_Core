@@ -14,4 +14,4 @@ Icarus Verilog or iVerlog is an open source simulator for the Verilog designs.  
 
 I want to keep this project open source so anyone can use the software.
 
-Another alternative is Xilinx Vivado with Webpack license(has System Verilog), but Cocotb doesn’t support this simulator. 
+Another alternative is Xilinx Vivado with Webpack license(has System Verilog), but Cocotb doesn’t support this simulator yet. 
