@@ -7,7 +7,7 @@ taxonomy:
 
 ### WHAT
 
-This is a HDL processor based off the open source RISCV architecture. It will be Designed in two different HDL languages VHDL and Verilog.  System Verilog will not be used because there is no open source System Verilog Simulator.  Cocotb will be used to design test benches to test both languages.  Icarus Veilog will be used to simulate the Verilog design. GHDL will be used to simulate the VHDL design.  
+The WARP Core is a HDL processor based off the open source RISCV architecture. It will be Designed in two different HDL languages VHDL and Verilog.  System Verilog will not be used because there is no open source System Verilog Simulator.  Cocotb will be used to design test benches to test both languages.  Icarus Veilog will be used to simulate the Verilog design. GHDL will be used to simulate the VHDL design.  
 
 ### Why
 
