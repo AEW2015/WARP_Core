@@ -12,3 +12,4 @@ child_type: docs
 
 A VHDL and Verilog Processor designed for academic purposes and future potential as a soft-core processor build for space
 
+[config_regTB.sv.html](config_regTB.sv.html)
