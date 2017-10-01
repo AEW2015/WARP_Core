@@ -1,0 +1,214 @@
+{\rtf1\ansi\deff0\deftab480
+
+{\fonttbl
+{\f000 Courier New;}
+{\f001 Courier New;}
+{\f002 Courier New;}
+{\f003 Courier New;}
+{\f004 Courier New;}
+{\f005 Courier New;}
+{\f006 Courier New;}
+{\f007 Courier New;}
+{\f008 Courier New;}
+{\f009 Courier New;}
+}
+
+{\colortbl
+\red000\green000\blue000;
+\red255\green255\blue255;
+\red000\green128\blue000;
+\red255\green255\blue255;
+\red255\green128\blue000;
+\red255\green255\blue255;
+\red000\green000\blue255;
+\red255\green255\blue255;
+\red128\green128\blue128;
+\red255\green255\blue255;
+\red128\green000\blue255;
+\red255\green255\blue255;
+\red128\green064\blue000;
+\red255\green255\blue255;
+\red000\green000\blue128;
+\red255\green255\blue255;
+\red000\green000\blue000;
+\red255\green255\blue255;
+\red000\green000\blue000;
+\red255\green255\blue255;
+}
+
+\f997093229\fs20\cb19\cf18 \highlight13\cf12 `timescale\highlight1\cf0  \highlight5\cf4 1ns\highlight15\cf14\b /\highlight5\cf4\b0 1ns\highlight1\cf0 \par
+\par
+\highlight7\cf6\b module\highlight1\cf0\b0  \highlight17\cf16 config_regTB\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\par
+\tab \highlight7\cf6\b typedef\highlight1\cf0\b0  \highlight7\cf6\b struct\highlight1\cf0\b0  \highlight15\cf14\b \{\highlight1\cf0\b0 \par
+\tab \tab \highlight3\cf2 //Name\par
+\highlight1\cf0 \tab \tab \highlight7\cf6\b string\highlight1\cf0\b0  \highlight17\cf16 name\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight3\cf2 //Data to write\par
+\highlight1\cf0 \tab \tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 data_write\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight3\cf2 //Expected data read\par
+\highlight1\cf0 \tab \tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 exp_data_read\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight3\cf2 //Actual data read\par
+\highlight1\cf0 \tab \tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 act_data_read\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight3\cf2 //reset value\par
+\highlight1\cf0 \tab \tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 reset_value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight15\cf14\b \}\highlight1\cf0\b0  \highlight17\cf16 reg_type\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\par
+\tab \highlight7\cf6\b integer\highlight1\cf0\b0  \highlight17\cf16 testCount\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b int\highlight1\cf0\b0  \highlight17\cf16 k\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b int\highlight1\cf0\b0  \highlight17\cf16 error_count\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b int\highlight1\cf0\b0  \highlight17\cf16 error_found\highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b bit\highlight1\cf0\b0  \highlight17\cf16 verbose\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight17\cf16 clk\highlight15\cf14\b ,\highlight1\cf0\b0  \highlight17\cf16 write\highlight15\cf14\b ,\highlight1\cf0\b0  \highlight17\cf16 reset\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 data_in\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 2\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 address\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 data_out\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b string\highlight1\cf0\b0  \highlight17\cf16 operations\highlight15\cf14\b [\highlight5\cf4\b0 9\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight15\cf14\b \{\highlight9\cf8\b0 "write to adc0_reg"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to adc1_reg"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to temp_sensor0_reg"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to temp_sensor1_reg"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to analog_test"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to digital_test"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to amp_gain"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "write to digital_config"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight9\cf8 "reset"\highlight1\cf0 \par
+\tab \tab \tab \tab \tab \tab \tab \highlight15\cf14\b \};\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 operation_write_value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b bit\highlight1\cf0\b0  \highlight17\cf16 recorded\highlight1\cf0  \highlight15\cf14\b [\highlight5\cf4\b0 9\highlight15\cf14\b ];\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b bit\highlight1\cf0\b0  \highlight17\cf16 recorded_rst\highlight1\cf0  \highlight15\cf14\b [\highlight5\cf4\b0 9\highlight15\cf14\b ];\highlight1\cf0\b0 \par
+\tab \par
+\tab \par
+\tab \par
+\tab \highlight17\cf16 reg_type\highlight1\cf0  \highlight17\cf16 reg_array\highlight1\cf0  \highlight15\cf14\b [\highlight5\cf4\b0 0\highlight15\cf14\b :\highlight5\cf4\b0 7\highlight15\cf14\b ];\highlight1\cf0\b0 \par
+\tab \par
+\tab \par
+\par
+\tab \highlight17\cf16 config_reg\highlight1\cf0  \highlight17\cf16 dut\highlight15\cf14\b (.*);\highlight1\cf0\b0 \par
+\par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 print_regs\highlight15\cf14\b ();\highlight1\cf0\b0 \par
+\tab \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns] Reg Print Out"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b foreach\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ])\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "\\t[%0d] %20s \\tExpected Value = %04X \\tActual Value = %04x"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 addr\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 act_data_read\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 test_reg_values\highlight1\cf0  \highlight15\cf14\b (\highlight7\cf6 int\highlight1\cf0\b0  \highlight17\cf16 operation\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \highlight17\cf16 error_found\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b foreach\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ])\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 address\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 addr\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight15\cf14\b #\highlight5\cf4\b0 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 act_data_read\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 data_out\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 act_data_read\highlight1\cf0  \highlight15\cf14\b !=\highlight1\cf0\b0  \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 ((\highlight17\cf16\b0 operation\highlight15\cf14\b <\highlight5\cf4\b0 8\highlight1\cf0  \highlight15\cf14\b &&\highlight1\cf0\b0  \highlight17\cf16 recorded\highlight15\cf14\b [\highlight17\cf16\b0 operation\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight15\cf14\b ==\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b )||(\highlight17\cf16\b0 operation\highlight15\cf14\b ==\highlight5\cf4\b0 8\highlight1\cf0  \highlight15\cf14\b &&\highlight1\cf0\b0  \highlight17\cf16 recorded_rst\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight15\cf14\b ==\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b )||(\highlight17\cf16\b0 error_found\highlight15\cf14\b ==\highlight5\cf4\b0 1\highlight15\cf14\b )||\highlight17\cf16\b0 verbose\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 operation\highlight15\cf14\b ==\highlight5\cf4\b0 8\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 error_found\highlight15\cf14\b ==\highlight5\cf4\b0 0\highlight15\cf14\b )\highlight11\cf10\b0 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns]ERROR on %s write is %d"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b ,\highlight17\cf16\b0 operations\highlight15\cf14\b [\highlight17\cf16\b0 operation\highlight15\cf14\b ],\highlight17\cf16\b0 write\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight17\cf16 recorded_rst\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight17\cf16 error_found\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight7\cf6\b else\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight7\cf6\b if\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 error_found\highlight15\cf14\b ==\highlight5\cf4\b0 0\highlight15\cf14\b )\highlight11\cf10\b0 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns]ERROR on %s %04X"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b ,\highlight17\cf16\b0 operations\highlight15\cf14\b [\highlight17\cf16\b0 operation\highlight15\cf14\b ],\highlight17\cf16\b0 operation_write_value\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight17\cf16 recorded\highlight15\cf14\b [\highlight17\cf16\b0 operation\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight15\cf14\b =\highlight5\cf4\b0 1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \tab \highlight17\cf16 error_found\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "\\t[%0d] %14s \\tExpected Value = %04X \\tActual Value = %04x"\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight17\cf16 addr\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight15\cf14\b ,\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 act_data_read\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \par
+\tab \tab \tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \par
+\tab \tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 act_data_read\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 setup_reg_array\highlight1\cf0  \highlight15\cf14\b ();\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 0\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "adc0_reg"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 0\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'hffff\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 1\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "adc1_reg"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 1\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 2\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "temp_sensor0_reg"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 2\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 3\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "temp_sensor1_reg"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 3\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 4\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "analog_test"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 4\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'hABCD\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 5\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "digital_test"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 5\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 6\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "amp_gain"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 6\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 7\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight9\cf8 "digital_config"\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight5\cf4\b0 7\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 16'h1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 verbose\highlight15\cf14\b )\highlight1\cf0\b0  \par
+\tab \tab \tab \highlight7\cf6\b foreach\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ])\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns][%0d] %20s \\treset value = %04X"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b ,\highlight17\cf16\b0 k\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 test_reset\highlight1\cf0  \highlight15\cf14\b ();\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reset\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 1\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight15\cf14\b @\highlight1\cf0\b0  \highlight15\cf14\b (\highlight7\cf6 negedge\highlight1\cf0\b0  \highlight17\cf16 clk\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reset\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b foreach\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ])\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 test_reg_values\highlight15\cf14\b (\highlight5\cf4\b0 8\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \tab \par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 test_inputs\highlight1\cf0  \highlight15\cf14\b (\highlight7\cf6 logic\highlight1\cf0\b0   \highlight17\cf16 resertV\highlight15\cf14\b ,\highlight1\cf0\b0  \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight17\cf16 writeV\highlight15\cf14\b ,\highlight1\cf0\b0  \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 2\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 addr\highlight15\cf14\b ,\highlight1\cf0\b0  \highlight7\cf6\b logic\highlight1\cf0\b0  \highlight15\cf14\b [\highlight5\cf4\b0 15\highlight15\cf14\b :\highlight5\cf4\b0 0\highlight15\cf14\b ]\highlight1\cf0\b0  \highlight17\cf16 value\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reset\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 resertV\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 write\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 writeV\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 address\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 addr\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 data_in\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 operation_write_value\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight15\cf14\b @\highlight1\cf0\b0  \highlight15\cf14\b (\highlight7\cf6 negedge\highlight1\cf0\b0  \highlight17\cf16 clk\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 reset\highlight1\cf0  \highlight15\cf14\b ==\highlight1\cf0\b0  \highlight5\cf4 1\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 verbose\highlight15\cf14\b )\highlight1\cf0\b0  \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns]rst"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b foreach\highlight1\cf0\b0  \highlight15\cf14\b (\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ])\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \tab \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 k\highlight15\cf14\b ].\highlight17\cf16\b0 reset_value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 test_reg_values\highlight15\cf14\b (\highlight5\cf4\b0 8\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b else\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 verbose\highlight15\cf14\b )\highlight1\cf0\b0  \highlight11\cf10 $display\highlight15\cf14\b (\highlight9\cf8\b0 "[%0tns]write %s %04X"\highlight15\cf14\b ,\highlight11\cf10\b0 $realtime\highlight15\cf14\b ,\highlight17\cf16\b0 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 name\highlight15\cf14\b ,\highlight17\cf16\b0 value\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight7\cf6\b if\highlight15\cf14 (\highlight17\cf16\b0 write\highlight15\cf14\b )\highlight1\cf0\b0  \highlight17\cf16 reg_array\highlight15\cf14\b [\highlight17\cf16\b0 addr\highlight15\cf14\b ].\highlight17\cf16\b0 exp_data_read\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight17\cf16 value\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight17\cf16 test_reg_values\highlight15\cf14\b (\highlight17\cf16\b0 addr\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b task\highlight1\cf0\b0  \highlight17\cf16 random_writes\highlight15\cf14\b (\highlight7\cf6 int\highlight1\cf0\b0  \highlight17\cf16 count\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b for\highlight15\cf14 (\highlight7\cf6 int\highlight1\cf0\b0  \highlight17\cf16 j\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0  \highlight17\cf16 j\highlight15\cf14\b <\highlight17\cf16\b0 count\highlight15\cf14\b ;\highlight1\cf0\b0  \highlight17\cf16 j\highlight15\cf14\b +=\highlight5\cf4\b0 1\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \tab \highlight17\cf16 test_inputs\highlight15\cf14\b (\highlight17\cf16\b0 $urandom\highlight15\cf14\b ,\highlight17\cf16\b0 $urandom\highlight15\cf14\b ,\highlight17\cf16\b0 $urandom\highlight15\cf14\b ,\highlight17\cf16\b0 $urandom\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b endtask\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b initial\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 write\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 reset\highlight1\cf0  \highlight15\cf14\b =\highlight1\cf0\b0  \highlight5\cf4 0\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 setup_reg_array\highlight15\cf14\b ();\highlight1\cf0\b0 \par
+\tab \tab \highlight15\cf14\b @\highlight1\cf0\b0  \highlight15\cf14\b (\highlight7\cf6 negedge\highlight1\cf0\b0  \highlight17\cf16 clk\highlight15\cf14\b )\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 test_reset\highlight15\cf14\b ();\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 random_writes\highlight15\cf14\b (\highlight17\cf16\b0 testCount\highlight15\cf14\b );\highlight1\cf0\b0 \par
+\tab \tab \highlight11\cf10 $finish\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \par
+\tab \highlight7\cf6\b always\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b begin\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 clk\highlight1\cf0  \highlight15\cf14\b <=\highlight5\cf4\b0 1\highlight15\cf14\b ;\highlight1\cf0\b0  \highlight15\cf14\b #\highlight5\cf4\b0 5ns\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \tab \highlight17\cf16 clk\highlight1\cf0  \highlight15\cf14\b <=\highlight5\cf4\b0 0\highlight15\cf14\b ;\highlight1\cf0\b0  \highlight15\cf14\b #\highlight5\cf4\b0 5ns\highlight15\cf14\b ;\highlight1\cf0\b0 \par
+\tab \highlight7\cf6\b end\highlight1\cf0\b0 \par
+\tab \par
+\highlight7\cf6\b endmodule}
