@@ -12,7 +12,7 @@ child_type: docs
 
 A VHDL and Verilog Processor designed for academic purposes and future potential as a soft-core processor build for space
 
-```SystemVerilog
+```v
 `timescale 1ns/1ns
 
 module config_regTB;
