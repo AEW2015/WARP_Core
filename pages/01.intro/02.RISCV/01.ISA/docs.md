@@ -1,7 +1,8 @@
 ---
-title: Instruction Set Architecture
+title: 'Instruction Set Architecture'
 taxonomy:
-    category: docs
+    category:
+        - docs
 ---
 
-add them!
+![](ISA.PNG)
