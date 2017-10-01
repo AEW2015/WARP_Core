@@ -25,7 +25,7 @@ A VHDL and Verilog Processor designed for academic purposes and future potential
 <h6>h6 Heading</h6>
 ```
 
-```verilog
+```v
 `timescale 1ns/1ns
 
 module config_regTB;
