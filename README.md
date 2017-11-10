@@ -7,6 +7,16 @@ Wilson AXI RISCV Processor Core
 
 The Goal is design a working RISCV processor for the Artix-7 on the Arty Board
 
+
+## Schedule
+|#|Title|Progress|Hourse|Due Date|
+|---|---|-------|---|---|
+|1.| Basic Instruction Set| [-----------]| 0 hours|  Due Now 15|
+|2.| Compiler Setup        |[-----------]| 0 hours | Due Now 22|
+|3.| First Benchmark       |[-----------]| 0 hours | Due Now 29|
+|4.| Axi Master Interface  |[-----------]| 0 hours | Due Dec 6|
+|5.| Memory Benchmark      |[-----------]| 0 hours | Due Dec 13|
+
 ## Info
 
 This Project is now focused on designing a RISCV processor to use the AXI bus.
