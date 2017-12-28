@@ -7,15 +7,17 @@ Wilson AXI RISCV Processor Core
 
 The Goal is design a working RISCV processor for the Artix-7 on the Arty Board
 
+STEPS:
+* EDAplayground for a System Verilog test bench and DUT
+* Have test bench use UVM
+* Move test bnech and DUT to open source software COCOTB, IVerilog, and GHDL
+* Compare options
 
 ## Schedule
 |#|Title|Progress|Hourse|Due Date|
 |---|---|-------|---|---|
-|1.| Basic Instruction Set| [-----------]| 0 hours|  Due Now 15|
-|2.| Compiler Setup        |[-----------]| 0 hours | Due Now 22|
-|3.| First Benchmark       |[-----------]| 0 hours | Due Now 29|
-|4.| Axi Master Interface  |[-----------]| 0 hours | Due Dec 6|
-|5.| Memory Benchmark      |[-----------]| 0 hours | Due Dec 13|
+|1.| EDA Plyaground Simple Project| [-----------]| 0 hours|  Due Jan 3|
+
 
 ## Info
 
