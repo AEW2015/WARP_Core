@@ -12,10 +12,13 @@ child_type: docs
 
 A VHDL and Verilog Processor designed for academic purposes and future potential as a soft-core processor build for space
 
+STEPS:
+* EDAplayground for a System Verilog test bench and DUT
+* Have test bench use UVM
+* Move test bnech and DUT to open source software COCOTB, IVerilog, and GHDL
+* Compare options
+
+## Schedule
 |#|Title|Progress|Hourse|Due Date|
 |---|---|-------|---|---|
-|1.| Basic Instruction Set| [-----------]| 0 hours|  Due Now 24|
-|2.| Compiler Setup        |[-----------]| 0 hours | Due Now 29|
-|3.| First Benchmark       |[-----------]| 0 hours | Due Now 29|
-|4.| Axi Master Interface  |[-----------]| 0 hours | Due Dec 6|
-|5.| Memory Benchmark      |[-----------]| 0 hours | Due Dec 13|
+|1.| EDA Plyaground Simple Project| [-----------]| 0 hours|  Due Jan 3|
