@@ -21,4 +21,4 @@ STEPS:
 ## Schedule
 |#|Title|Progress|Hourse|Due Date|
 |---|---|-------|---|---|
-|1.| EDA Plyaground Simple Project| [=>---------]| 0 hours|  Due Jan 3|
+|1.| EDA Plyaground Simple Project| [=>---------]| 2 hours|  Due Jan 3|
