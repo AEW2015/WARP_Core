@@ -14,9 +14,7 @@ STEPS:
 * Compare options
 
 ## Schedule
-|#|Title|Progress|Hourse|Due Date|
-|---|---|-------|---|---|
-|1.| EDA Plyaground Simple Project| [-----------]| 0 hours|  Due Jan 3|
+Check website for updates
 
 
 ## Info
