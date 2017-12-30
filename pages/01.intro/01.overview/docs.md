@@ -7,7 +7,7 @@ taxonomy:
 
 ### WHAT
 
-The WARP Core is a HDL processor based off the open source RISCV architecture. It will be Designed in two different HDL languages VHDL and Verilog.  System Verilog will not be used because there is no open source System Verilog Simulator.  Cocotb will be used to design test benches to test both languages.  Icarus Veilog will be used to simulate the Verilog design. GHDL will be used to simulate the VHDL design.  
+The WARP Core is a HDL processor based off the open source RISCV architecture. Several different tools will be used to build and test this soft-core processor.  First, EDA Playground will be used with system verilog to setup a test bench with assertions and full coverage to exercise the methods I have learned in my verification class.  Next, UVM will be used within EDA Playgoudn to create a test bench and understand it's potential and wide use in industry.  Finally, Cocotb (Pyhton based verification tool) will be used to design test benches to test both languages.  Icarus Veilog will be used to simulate the Verilog design. GHDL will be used to simulate the VHDL design. The final step is important to understand the the difference in tools and languages as well as the potential of open-source software.
 
 ### Why
 
