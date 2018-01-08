@@ -13,5 +13,7 @@ taxonomy:
 - sudo apt-get install gnatmake
 - sudo apt-get install gnat
 - sudo apt-get install zlib1g-dev
+- (archlinux) pacman -S gcc-ada
+- ./configure --prefix=/usr/local
 - sudo make
 - sudo make install
