@@ -19,6 +19,6 @@ STEPS:
 * Compare options
 
 ## Schedule
-|#|Title|Progress|Hourse|Due Date|
+|#|Title|Progress|Hours|Due Date|
 |---|---|-------|---|---|
 |1.| EDA Plyaground Simple Project| [==>--------]| 3 hours| March 3|
