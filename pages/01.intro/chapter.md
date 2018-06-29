@@ -12,6 +12,19 @@ child_type: docs
 
 A VHDL and Verilog Processor designed for academic purposes and future potential as a soft-core processor build for space
 
+TODO:
+* This project will explore open source tools and IP, and have tutorials, examples, videos, and testbenchs.
+* This project will also explore different FPGA companies and devleopment boards.
+* List of tools and IP to explore:
+    * COCOTB
+    * IVerilog
+    * Chisel
+    * GHDL
+    * LiteX
+    * Various Riscv processors (ex. VexRiscv)
+    * Python/C based HLS Tools
+    
+
 STEPS:
 * EDAplayground for a System Verilog test bench and DUT
 * Have test bench use UVM
